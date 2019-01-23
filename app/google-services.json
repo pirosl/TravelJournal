@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "90327943458",
+    "firebase_url": "https://traveljournal-bedf8.firebaseio.com",
+    "project_id": "traveljournal-bedf8",
+    "storage_bucket": "traveljournal-bedf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90327943458:android:952da22cbdcedb36",
+        "android_client_info": {
+          "package_name": "com.lucianpiros.traveljournal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90327943458-llc6g0e8g1800656j1eve39bksgh1edj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQcf7NSuNssXZArRZ7J--hBQ_2IAR6boI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
