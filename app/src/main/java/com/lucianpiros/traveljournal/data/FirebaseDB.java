@@ -6,16 +6,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.model.Note;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
 public class FirebaseDB {
 
+    public interface NoteDBEventsListener {
+        public void OnNotesListChanged(List<Note> notesList);
+    }
+
     private static FirebaseDB firebaseDB = null;
     private DatabaseReference databaseReference;
+
+    private NoteDBEventsListener noteDBEventsListener;
 
     private ArrayList<Note> notes;
 
@@ -35,8 +43,15 @@ public class FirebaseDB {
         return firebaseDB;
     }
 
+    public void setNoteDBEventsListener(@NotNull NoteDBEventsListener noteDBEventsListener) {
+        this.noteDBEventsListener = noteDBEventsListener;
+
+        retrieveNotes();
+    }
+
     public Boolean save(@NonNull Note note) {
         Boolean saved = false;
+
         try {
             databaseReference.child("notes").push().setValue(note);
             saved = true;
@@ -52,12 +67,15 @@ public class FirebaseDB {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 fetchData(dataSnapshot);
+
+                noteDBEventsListener.OnNotesListChanged(notes);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 fetchData(dataSnapshot);
 
+                noteDBEventsListener.OnNotesListChanged(notes);
             }
 
             @Override
@@ -82,7 +100,7 @@ public class FirebaseDB {
     private void fetchData(DataSnapshot dataSnapshot) {
         notes.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            Note name=ds.getValue(Note.class);
+            Note name = ds.getValue(Note.class);
             notes.add(name);
         }
     }
