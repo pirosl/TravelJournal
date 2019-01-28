@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -24,6 +25,8 @@ import com.lucianpiros.traveljournal.data.adapter.NotesAdapter;
 import com.lucianpiros.traveljournal.model.Note;
 
 import java.util.List;
+
+import static android.widget.LinearLayout.VERTICAL;
 
 public class JournalNotesListFragment extends Fragment implements FirebaseDB.NoteDBEventsListener {
 
@@ -47,6 +50,9 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(fragmentView.getContext());
         noteRV.setLayoutManager(mLayoutManager);
         noteRV.setItemAnimator(new DefaultItemAnimator());
+
+        DividerItemDecoration decoration = new DividerItemDecoration(fragmentView.getContext(), VERTICAL);
+        noteRV.addItemDecoration(decoration);
 
         FirebaseDB.getInstance().setNoteDBEventsListener(this);
 

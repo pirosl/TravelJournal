@@ -13,5 +13,5 @@
     android:layout_height="match_parent"
     tools:context="com.lucianpiros.traveljournal.ui.MainActivity"
     android:layout_marginBottom="?android:attr/actionBarSize" />
-    
+
 </LinearLayout>

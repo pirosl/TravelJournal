@@ -25,6 +25,7 @@
         app:tabMaxWidth="0dp"
         app:tabMode="fixed"
         app:tabGravity="center"
+        app:tabBackground="@color/colorSecondary"
         app:tabTextColor="@android:color/primary_text_dark"
         style="@style/TabTheme" />
 
