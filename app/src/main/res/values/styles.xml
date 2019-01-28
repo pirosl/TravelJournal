@@ -12,4 +12,18 @@
         <!-- <item name="android:background">@color/colorPrimaryChild</item> -->
     </style>
 
+    <!-- Style to be used on notes -->
+    <style name="Title" parent="@android:style/TextAppearance.Large">
+        <item name="android:gravity">bottom</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">@dimen/layout_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/layout_horizontal_padding</item>
+    </style>
+
+    <style name="Text" parent="@android:style/TextAppearance.Small">
+        <item name="android:gravity">left</item>
+        <item name="android:paddingLeft">@dimen/layout_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/layout_horizontal_padding</item>
+    </style>
+
 </resources>
