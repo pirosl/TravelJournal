@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/note_title"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:hint="@string/note_title"
-        android:textSize="@dimen/material_typography_regular_headline_text_size" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/list_padding">
+
+        <EditText
+            android:id="@+id/note_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:hint="@string/note_title"
+            android:textSize="@dimen/material_typography_regular_headline_text_size" />
+
+        <EditText
+            android:id="@+id/note_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/text_margin"
+            android:background="@android:color/transparent"
+            android:enabled="true"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:isScrollContainer="true"
+            android:maxLines="60" />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_addpicture"
@@ -19,12 +38,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorAccent"
         app:elevation="6dp"
         app:layout_anchor="@id/gap_addmovie"
-        app:backgroundTint="@color/colorAccent"
         app:layout_anchorGravity="top|end"
-        android:visibility="invisible"
-        app:pressedTranslationZ="12dp"/>
+        app:pressedTranslationZ="12dp" />
 
     <View
         android:id="@+id/gap_addmovie"
@@ -39,14 +58,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_margin="@dimen/fab_margin"
+        android:clipToPadding="false"
+        android:padding="@dimen/fab_margin"
         android:visibility="invisible"
+        app:backgroundTint="@color/colorAccent"
         app:elevation="6dp"
         app:layout_anchor="@+id/gap_add"
         app:layout_anchorGravity="top|center"
-        app:backgroundTint="@color/colorAccent"
-        app:pressedTranslationZ="12dp"
-        android:padding="@dimen/fab_margin"
-        android:clipToPadding="false"/>
+        app:pressedTranslationZ="12dp" />
 
     <View
         android:id="@+id/gap_add"
@@ -62,6 +81,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp"/>
+        app:pressedTranslationZ="12dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
