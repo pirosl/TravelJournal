@@ -1,5 +1,6 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,7 +12,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -59,11 +59,15 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Note note = new Note();
+               /* Note note = new Note();
                 note.setNoteContent("Content");
                 note.setNoteTitle("Title");
 
                 FirebaseDB.getInstance().save(note);
+                */
+               Intent addNoteIntent = new Intent(view.getContext(), AddJournalNoteActivity.class);
+               startActivity(addNoteIntent);
+
             }
         });
         return fragmentView;

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/note_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="@string/note_title"
+        android:textSize="@dimen/material_typography_regular_headline_text_size" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_addpicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/fab_margin"
+        app:elevation="6dp"
+        app:layout_anchor="@id/gap_addmovie"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_anchorGravity="top|end"
+        android:visibility="invisible"
+        app:pressedTranslationZ="12dp"/>
+
+    <View
+        android:id="@+id/gap_addmovie"
+        android:layout_width="@dimen/fab_margin"
+        android:layout_height="@dimen/fab_margin"
+        app:layout_anchor="@id/fab_addmovie"
+        app:layout_anchorGravity="top" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_addmovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:layout_anchor="@+id/gap_add"
+        app:layout_anchorGravity="top|center"
+        app:backgroundTint="@color/colorAccent"
+        app:pressedTranslationZ="12dp"
+        android:padding="@dimen/fab_margin"
+        android:clipToPadding="false"/>
+
+    <View
+        android:id="@+id/gap_add"
+        android:layout_width="@dimen/fab_margin"
+        android:layout_height="@dimen/fab_margin"
+        app:layout_anchor="@id/fab_add"
+        app:layout_anchorGravity="top" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
