@@ -1,5 +1,7 @@
 package com.lucianpiros.traveljournal.data;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,10 +22,15 @@ public class FirebaseDB {
         public void OnNotesListChanged(List<Note> notesList);
     }
 
+    public interface OnDBCompleteListener {
+        public void onCoplete(boolean success);
+    }
+
     private static FirebaseDB firebaseDB = null;
     private DatabaseReference databaseReference;
 
     private NoteDBEventsListener noteDBEventsListener;
+    private OnDBCompleteListener onDBCompleteListener;
 
     private ArrayList<Note> notes;
 
@@ -49,11 +56,20 @@ public class FirebaseDB {
         retrieveNotes();
     }
 
+    public void setOnDBCompleteListener(OnDBCompleteListener onDBCompleteListener) {
+        this.onDBCompleteListener = onDBCompleteListener;
+    }
+
     public Boolean save(@NonNull Note note) {
         Boolean saved = false;
 
         try {
-            databaseReference.child("notes").push().setValue(note);
+            databaseReference.child("notes").push().setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    onDBCompleteListener.onCoplete(task.isSuccessful());
+                }
+            });
             saved = true;
         }catch (DatabaseException e) {
             e.printStackTrace();

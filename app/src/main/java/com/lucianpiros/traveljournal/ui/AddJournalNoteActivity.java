@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
@@ -19,14 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddJournalNoteActivity extends AppCompatActivity {
+public class AddJournalNoteActivity extends AppCompatActivity implements FirebaseDB.OnDBCompleteListener {
 
+    @BindView(R.id.addnote_mainlayout) CoordinatorLayout mainLayout;
     @BindView(R.id.fab_addpicture) FloatingActionButton addPictureFAB;
     @BindView(R.id.fab_addmovie) FloatingActionButton addMovieFAB;
     @BindView(R.id.fab_add) FloatingActionButton addFAB;
@@ -46,6 +49,8 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addjournalnote);
 
         ButterKnife.bind(this);
+
+        FirebaseDB.getInstance().setOnDBCompleteListener(this);
 
         isAddFABExpanded = false;
         expandFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_expand);
@@ -79,7 +84,6 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 addNote();
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -119,5 +123,23 @@ public class AddJournalNoteActivity extends AppCompatActivity {
 
             isAddFABExpanded = true;
         }
+    }
+
+    @Override
+    public void onCoplete(boolean success) {
+        Snackbar snackbar = Snackbar
+                .make(mainLayout, getResources().getString(R.string.addnote_success), Snackbar.LENGTH_SHORT);;
+        if(!success) {
+            snackbar.setText(getResources().getString(R.string.addnote_error));
+        }
+
+        snackbar.show();
+
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                finish();
+            }
+        });
     }
 }
