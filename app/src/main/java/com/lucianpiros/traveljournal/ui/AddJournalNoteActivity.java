@@ -1,6 +1,9 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -8,6 +11,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,6 +40,19 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         collapseFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_colapse);
         closeFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_close);
         openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_open);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.addnote_menu, menu);
+
+        Drawable drawable = menu.findItem(R.id.action_save).getIcon();
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(this,R.color.colorAccent));
+        menu.findItem(R.id.action_save).setIcon(drawable);
+
+        return true;
     }
 
     @OnClick(R.id.fab_add)
