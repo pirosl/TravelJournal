@@ -7,10 +7,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.data.FirebaseDB;
+import com.lucianpiros.traveljournal.model.Note;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +30,11 @@ public class AddJournalNoteActivity extends AppCompatActivity {
     @BindView(R.id.fab_addpicture) FloatingActionButton addPictureFAB;
     @BindView(R.id.fab_addmovie) FloatingActionButton addMovieFAB;
     @BindView(R.id.fab_add) FloatingActionButton addFAB;
+    @BindView(R.id.note_title) EditText noteTitleET;
     @BindView(R.id.note_date) TextView noteDateTV;
+    @BindView(R.id.note_content) EditText noteContentET;
+
+    private Date noteCreationDate;
 
     private boolean isAddFABExpanded;
 
@@ -47,9 +54,9 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_open);
 
         // set not date and time
-        Date now = new Date();
+        noteCreationDate = new Date();
         SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
-        noteDateTV.setText(dateSF.format(now));
+        noteDateTV.setText(dateSF.format(noteCreationDate));
     }
 
     @Override
@@ -64,6 +71,29 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         menu.findItem(R.id.action_save).setIcon(drawable);
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                addNote();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void addNote() {
+        Note note = new Note();
+        note.setNoteTitle(noteTitleET.getText().toString());
+        note.setNoteContent(noteContentET.getText().toString());
+        note.setNoteCreationDate(noteCreationDate);
+
+        // add note to Firebase database
+        FirebaseDB.getInstance().save(note);
     }
 
     @OnClick(R.id.fab_add)

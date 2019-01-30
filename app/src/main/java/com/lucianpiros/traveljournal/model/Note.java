@@ -2,10 +2,13 @@ package com.lucianpiros.traveljournal.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.Date;
+
 @IgnoreExtraProperties
 public class Note {
     private String noteTitle;
     private String noteContent;
+    private Date noteCreationDate;
 
 
     public Note() {
@@ -26,4 +29,13 @@ public class Note {
     public void setNoteContent(String noteContent) {
         this.noteContent = noteContent;
     }
+
+    public Date getNoteCreationDate() {
+        return noteCreationDate;
+    }
+
+    public void setNoteCreationDate(Date noteCreationDate) {
+        this.noteCreationDate = noteCreationDate;
+    }
+
 }

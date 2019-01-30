@@ -59,15 +59,8 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* Note note = new Note();
-                note.setNoteContent("Content");
-                note.setNoteTitle("Title");
-
-                FirebaseDB.getInstance().save(note);
-                */
                Intent addNoteIntent = new Intent(view.getContext(), AddJournalNoteActivity.class);
                startActivity(addNoteIntent);
-
             }
         });
         return fragmentView;
