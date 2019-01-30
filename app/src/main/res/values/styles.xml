@@ -26,4 +26,17 @@
         <item name="android:paddingRight">@dimen/layout_horizontal_padding</item>
     </style>
 
+    <style name="FloatingActionButton">
+        <item name="elevation">@dimen/material_elevation_fab_resting</item>
+        <item name="pressedTranslationZ">12dp</item>
+    </style>
+
+    <style name="SmallFloatingActionButton" parent="FloatingActionButton">
+        <item name="android:layout_margin">@dimen/fab_margin</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="backgroundTint">@color/colorAccent</item>
+    </style>
+
 </resources>

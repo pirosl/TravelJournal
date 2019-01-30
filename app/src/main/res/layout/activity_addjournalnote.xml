@@ -36,14 +36,10 @@
         android:id="@+id/fab_addpicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="@dimen/fab_margin"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
-        app:elevation="6dp"
         app:layout_anchor="@id/gap_addmovie"
         app:layout_anchorGravity="top|end"
-        app:pressedTranslationZ="12dp" />
+        android:src="@drawable/ic_add_a_photo"
+        style="@style/SmallFloatingActionButton" />
 
     <View
         android:id="@+id/gap_addmovie"
@@ -56,16 +52,10 @@
         android:id="@+id/fab_addmovie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="@dimen/fab_margin"
-        android:clipToPadding="false"
-        android:padding="@dimen/fab_margin"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
-        app:elevation="6dp"
+        style="@style/SmallFloatingActionButton"
         app:layout_anchor="@+id/gap_add"
-        app:layout_anchorGravity="top|center"
-        app:pressedTranslationZ="12dp" />
+        app:layout_anchorGravity="top|end"
+        android:src="@drawable/ic_add_a_movie" />
 
     <View
         android:id="@+id/gap_add"
@@ -80,7 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp" />
+        android:tint="@color/colorPrimary"
+        android:src="@android:drawable/ic_input_add"
+        style="@style/FloatingActionButton" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
