@@ -19,6 +19,15 @@
             android:hint="@string/note_title"
             android:textSize="@dimen/material_typography_regular_headline_text_size" />
 
+        <TextView
+            android:id="@+id/note_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/text_margin"
+            android:gravity="right|end"
+            android:textColor="@color/material_typography_hint_text_color_dark"
+            android:textSize="@dimen/material_bottom_sheet_grid_item_label_text_size" />
+
         <EditText
             android:id="@+id/note_content"
             android:layout_width="match_parent"
@@ -34,12 +43,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_addpicture"
+        style="@style/SmallFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/gap_addmovie"
-        app:layout_anchorGravity="top|end"
         android:src="@drawable/ic_add_a_photo"
-        style="@style/SmallFloatingActionButton" />
+        app:layout_anchor="@id/gap_addmovie"
+        app:layout_anchorGravity="top|end" />
 
     <View
         android:id="@+id/gap_addmovie"
@@ -50,12 +59,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_addmovie"
+        style="@style/SmallFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SmallFloatingActionButton"
+        android:src="@drawable/ic_add_a_movie"
         app:layout_anchor="@+id/gap_add"
-        app:layout_anchorGravity="top|end"
-        android:src="@drawable/ic_add_a_movie" />
+        app:layout_anchorGravity="top|end" />
 
     <View
         android:id="@+id/gap_add"
@@ -66,12 +75,12 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
+        style="@style/FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/colorPrimary"
         android:src="@android:drawable/ic_input_add"
-        style="@style/FloatingActionButton" />
+        android:tint="@color/colorPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

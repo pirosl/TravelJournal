@@ -3,12 +3,17 @@ package com.lucianpiros.traveljournal.ui;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -22,6 +27,7 @@ public class AddJournalNoteActivity extends AppCompatActivity {
     @BindView(R.id.fab_addpicture) FloatingActionButton addPictureFAB;
     @BindView(R.id.fab_addmovie) FloatingActionButton addMovieFAB;
     @BindView(R.id.fab_add) FloatingActionButton addFAB;
+    @BindView(R.id.note_date) TextView noteDateTV;
 
     private boolean isAddFABExpanded;
 
@@ -35,11 +41,15 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         isAddFABExpanded = false;
-
         expandFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_expand);
         collapseFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_colapse);
         closeFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_close);
         openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_open);
+
+        // set not date and time
+        Date now = new Date();
+        SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
+        noteDateTV.setText(dateSF.format(now));
     }
 
     @Override
@@ -47,6 +57,7 @@ public class AddJournalNoteActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.addnote_menu, menu);
 
+        // change tint color
         Drawable drawable = menu.findItem(R.id.action_save).getIcon();
         drawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(drawable, ContextCompat.getColor(this,R.color.colorAccent));
