@@ -23,7 +23,7 @@ public class FirebaseDB {
     }
 
     public interface OnDBCompleteListener {
-        public void onCoplete(boolean success);
+        public void onComplete(boolean success);
     }
 
     private static FirebaseDB firebaseDB = null;
@@ -67,7 +67,7 @@ public class FirebaseDB {
             databaseReference.child("notes").push().setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    onDBCompleteListener.onCoplete(task.isSuccessful());
+                    onDBCompleteListener.onComplete(task.isSuccessful());
                 }
             });
             saved = true;
