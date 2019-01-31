@@ -39,4 +39,15 @@
         <item name="backgroundTint">@color/colorAccent</item>
     </style>
 
+    <style name="AlertDialogButton">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginRight">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginEnd">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginStart">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginLeft">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginTop">@dimen/alertdialog_button_margin</item>
+        <item name="android:background">@drawable/alertdialogbutton_background</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
 </resources>

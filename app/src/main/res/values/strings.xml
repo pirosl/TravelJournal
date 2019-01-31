@@ -5,4 +5,10 @@
 
     <string name="addnote_success">Note saved</string>
     <string name="addnote_error">Error saving note</string>
+    <string name="notetitleorcontent_empty">Note title or note content null. Note can\'t be saved</string>
+
+    <string name="add_photo">Add Photo</string>
+    <string name="add_photo_option1">Take Photo</string>
+    <string name="add_photo_option2">Choose from Gallery</string>
+    <string name="add_photo_option3">Cancel</string>
 </resources>

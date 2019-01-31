@@ -1,24 +1,38 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -37,9 +51,37 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
     @BindView(R.id.note_date) TextView noteDateTV;
     @BindView(R.id.note_content) EditText noteContentET;
 
-    private Date noteCreationDate;
+    class CustomAlertDialog {
+        class Title {
+            @BindView(R.id.alertdialog_title) TextView valueTV;
+        }
 
+        class Body {
+            @BindView(R.id.button_option1) Button option1BT;
+            @BindView(R.id.button_option2) Button option2BT;
+            @BindView(R.id.button_option3) Button option3BT;
+
+            @OnClick(R.id.button_option1)
+            protected void take_photo() {
+                alertDialog.dismiss();
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 2);
+            }
+
+            @OnClick(R.id.button_option3)
+            protected void closeAlertDialog() {
+                alertDialog.dismiss();
+            }
+        }
+    }
+
+
+
+    private Date noteCreationDate;
     private boolean isAddFABExpanded;
+
+    private Dialog alertDialog;
 
     private Animation expandFABAnimation,collapseFABAnimation,closeFABAnimation,openFABAnimation;
 
@@ -91,17 +133,29 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
     }
 
     private void addNote() {
-        Note note = new Note();
-        note.setNoteTitle(noteTitleET.getText().toString());
-        note.setNoteContent(noteContentET.getText().toString());
-        note.setNoteCreationDate(noteCreationDate);
+        if(isValid(noteTitleET)&& isValid(noteContentET)) {
+            Note note = new Note();
+            note.setNoteTitle(noteTitleET.getText().toString());
+            note.setNoteContent(noteContentET.getText().toString());
+            note.setNoteCreationDate(noteCreationDate);
 
-        // add note to Firebase database
-        FirebaseDB.getInstance().save(note);
+            FirebaseDB.getInstance().save(note);
+        }
+        else {
+            Snackbar snackbar = Snackbar
+                    .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);;
+            snackbar.show();
+        }
+    }
+
+    private boolean isValid(@NotNull TextView textView) {
+        CharSequence text = textView.getText();
+
+        return (text != null && text.toString().length() > 0);
     }
 
     @OnClick(R.id.fab_add)
-    public void annimateAddFAB() {
+    protected void annimateAddFAB() {
         if(isAddFABExpanded) {
             addFAB.startAnimation(closeFABAnimation);
 
@@ -125,8 +179,36 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         }
     }
 
+    @OnClick(R.id.fab_addpicture)
+    protected void addPicture() {
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog();
+        final CustomAlertDialog.Title alertDialogTitle = customAlertDialog.new Title();
+        final CustomAlertDialog.Body alertDialogBody = customAlertDialog.new Body();
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+
+        View titleView = inflater.inflate(R.layout.alertdialolg_title, null);
+        ButterKnife.bind(alertDialogTitle, titleView);
+        alertDialogTitle.valueTV.setText(R.string.add_photo);
+
+        View bodyView = inflater.inflate(R.layout.alertdialog_body, viewGroup, false);
+        ButterKnife.bind(alertDialogBody, bodyView);
+        alertDialogBody.option1BT.setText(R.string.add_photo_option1);
+        alertDialogBody.option2BT.setText(R.string.add_photo_option2);
+        alertDialogBody.option3BT.setText(R.string.add_photo_option3);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddJournalNoteActivity.this).setCustomTitle(titleView);
+
+        builder.setView(bodyView);
+        alertDialog = builder.create();
+
+        alertDialog.show();
+    }
+
+
     @Override
-    public void onCoplete(boolean success) {
+    public void onComplete(boolean success) {
         Snackbar snackbar = Snackbar
                 .make(mainLayout, getResources().getString(R.string.addnote_success), Snackbar.LENGTH_SHORT);;
         if(!success) {
@@ -141,5 +223,14 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
                 finish();
             }
         });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Snackbar snackbar = Snackbar
+                .make(mainLayout, "return", Snackbar.LENGTH_SHORT);;
+
+        snackbar.show();
     }
 }
