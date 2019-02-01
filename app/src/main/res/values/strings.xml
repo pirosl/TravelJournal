@@ -11,4 +11,9 @@
     <string name="add_photo_option1">Take Photo</string>
     <string name="add_photo_option2">Choose from Gallery</string>
     <string name="add_photo_option3">Cancel</string>
+
+    <string name="add_video">Add Video</string>
+    <string name="add_video_option1">Record Video</string>
+    <string name="add_video_option2">Choose from Gallery</string>
+    <string name="add_video_option3">Cancel</string>
 </resources>

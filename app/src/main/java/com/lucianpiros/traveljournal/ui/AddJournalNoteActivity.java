@@ -1,14 +1,14 @@
 package com.lucianpiros.traveljournal.ui;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,7 +28,7 @@ import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 
-import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,30 +43,50 @@ import butterknife.OnClick;
 
 public class AddJournalNoteActivity extends AppCompatActivity implements FirebaseDB.OnDBCompleteListener {
 
-    @BindView(R.id.addnote_mainlayout) CoordinatorLayout mainLayout;
-    @BindView(R.id.fab_addpicture) FloatingActionButton addPictureFAB;
-    @BindView(R.id.fab_addmovie) FloatingActionButton addMovieFAB;
-    @BindView(R.id.fab_add) FloatingActionButton addFAB;
-    @BindView(R.id.note_title) EditText noteTitleET;
-    @BindView(R.id.note_date) TextView noteDateTV;
-    @BindView(R.id.note_content) EditText noteContentET;
+    @BindView(R.id.addnote_mainlayout)
+    CoordinatorLayout mainLayout;
+    @BindView(R.id.fab_addpicture)
+    FloatingActionButton addPictureFAB;
+    @BindView(R.id.fab_addmovie)
+    FloatingActionButton addMovieFAB;
+    @BindView(R.id.fab_add)
+    FloatingActionButton addFAB;
+    @BindView(R.id.note_title)
+    EditText noteTitleET;
+    @BindView(R.id.note_date)
+    TextView noteDateTV;
+    @BindView(R.id.note_picture)
+    ImageView notePictureIV;
+    @BindView(R.id.note_content)
+    EditText noteContentET;
 
     class CustomAlertDialog {
+        public static final int TAKE_PHOTO = 1;
+        public static final int TAKE_VIDEO = 2;
+
+        private int dialogType;
+
+        public CustomAlertDialog(int dialogType) {
+            this.dialogType = dialogType;
+        }
+
         class Title {
-            @BindView(R.id.alertdialog_title) TextView valueTV;
+            @BindView(R.id.alertdialog_title)
+            TextView valueTV;
         }
 
         class Body {
-            @BindView(R.id.button_option1) Button option1BT;
-            @BindView(R.id.button_option2) Button option2BT;
-            @BindView(R.id.button_option3) Button option3BT;
+            @BindView(R.id.button_option1)
+            Button option1BT;
+            @BindView(R.id.button_option2)
+            Button option2BT;
+            @BindView(R.id.button_option3)
+            Button option3BT;
 
-            @OnClick(R.id.button_option1)
-            protected void take_photo() {
+            @OnClick(R.id.button_option2)
+            protected void take_photo_video() {
                 alertDialog.dismiss();
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, 2);
+                AddJournalNoteActivity.this.launchIntent();
             }
 
             @OnClick(R.id.button_option3)
@@ -76,14 +96,20 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         }
     }
 
-
-
     private Date noteCreationDate;
     private boolean isAddFABExpanded;
 
     private Dialog alertDialog;
 
-    private Animation expandFABAnimation,collapseFABAnimation,closeFABAnimation,openFABAnimation;
+    private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
+
+    protected void launchIntent() {
+        //if(dialogType == TAKE_PHOTO) {
+        Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
+        //}
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +122,9 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
 
         isAddFABExpanded = false;
         expandFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_expand);
-        collapseFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_colapse);
-        closeFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_close);
-        openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_open);
+        collapseFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_colapse);
+        closeFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_close);
+        openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_open);
 
         // set not date and time
         noteCreationDate = new Date();
@@ -114,7 +140,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         // change tint color
         Drawable drawable = menu.findItem(R.id.action_save).getIcon();
         drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(this,R.color.colorAccent));
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.colorAccent));
         menu.findItem(R.id.action_save).setIcon(drawable);
 
         return true;
@@ -133,17 +159,17 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
     }
 
     private void addNote() {
-        if(isValid(noteTitleET)&& isValid(noteContentET)) {
+        if (isValid(noteTitleET) && isValid(noteContentET)) {
             Note note = new Note();
             note.setNoteTitle(noteTitleET.getText().toString());
             note.setNoteContent(noteContentET.getText().toString());
             note.setNoteCreationDate(noteCreationDate);
 
             FirebaseDB.getInstance().save(note);
-        }
-        else {
+        } else {
             Snackbar snackbar = Snackbar
-                    .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);;
+                    .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);
+            ;
             snackbar.show();
         }
     }
@@ -156,7 +182,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
 
     @OnClick(R.id.fab_add)
     protected void annimateAddFAB() {
-        if(isAddFABExpanded) {
+        if (isAddFABExpanded) {
             addFAB.startAnimation(closeFABAnimation);
 
             addPictureFAB.startAnimation(collapseFABAnimation);
@@ -181,7 +207,8 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
 
     @OnClick(R.id.fab_addpicture)
     protected void addPicture() {
-        CustomAlertDialog customAlertDialog = new CustomAlertDialog();
+
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_PHOTO);
         final CustomAlertDialog.Title alertDialogTitle = customAlertDialog.new Title();
         final CustomAlertDialog.Body alertDialogBody = customAlertDialog.new Body();
 
@@ -206,12 +233,40 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         alertDialog.show();
     }
 
+    @OnClick(R.id.fab_addmovie)
+    protected void addMovie() {
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_VIDEO);
+        final CustomAlertDialog.Title alertDialogTitle = customAlertDialog.new Title();
+        final CustomAlertDialog.Body alertDialogBody = customAlertDialog.new Body();
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+
+        View titleView = inflater.inflate(R.layout.alertdialolg_title, null);
+        ButterKnife.bind(alertDialogTitle, titleView);
+        alertDialogTitle.valueTV.setText(R.string.add_video);
+
+        View bodyView = inflater.inflate(R.layout.alertdialog_body, viewGroup, false);
+        ButterKnife.bind(alertDialogBody, bodyView);
+        alertDialogBody.option1BT.setText(R.string.add_video_option1);
+        alertDialogBody.option2BT.setText(R.string.add_video_option2);
+        alertDialogBody.option3BT.setText(R.string.add_video_option3);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddJournalNoteActivity.this).setCustomTitle(titleView);
+
+        builder.setView(bodyView);
+        alertDialog = builder.create();
+
+        alertDialog.show();
+    }
+
 
     @Override
     public void onComplete(boolean success) {
         Snackbar snackbar = Snackbar
-                .make(mainLayout, getResources().getString(R.string.addnote_success), Snackbar.LENGTH_SHORT);;
-        if(!success) {
+                .make(mainLayout, getResources().getString(R.string.addnote_success), Snackbar.LENGTH_SHORT);
+        ;
+        if (!success) {
             snackbar.setText(getResources().getString(R.string.addnote_error));
         }
 
@@ -225,12 +280,19 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         });
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Snackbar snackbar = Snackbar
-                .make(mainLayout, "return", Snackbar.LENGTH_SHORT);;
-
-        snackbar.show();
+        if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                notePictureIV.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
