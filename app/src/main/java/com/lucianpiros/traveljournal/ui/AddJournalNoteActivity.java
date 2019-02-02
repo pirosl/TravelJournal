@@ -90,7 +90,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
             @OnClick(R.id.button_option2)
             protected void take_photo_video() {
                 alertDialog.dismiss();
-                AddJournalNoteActivity.this.launchIntent();
+                AddJournalNoteActivity.this.launchIntent(dialogType);
             }
 
             @OnClick(R.id.button_option3)
@@ -100,19 +100,25 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         }
     }
 
-
     private boolean isAddFABExpanded;
 
     private Dialog alertDialog;
 
     private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
 
-    protected void launchIntent() {
-        //if(dialogType == TAKE_PHOTO) {
-        Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
-        //}
+    protected void launchIntent(int dialogType) {
+        if(dialogType == CustomAlertDialog.TAKE_PHOTO) {
+            Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            takephotoIntent.setType("image/*");
+            startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
+        }
+        if(dialogType == CustomAlertDialog.TAKE_VIDEO) {
+            Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT,
+                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            takevideoIntent.setType("video/*");
+            startActivityForResult(takevideoIntent, CustomAlertDialog.TAKE_VIDEO);
+        }
     }
 
     @Override
@@ -282,6 +288,13 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             }
+        }
+        if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
+                && null != data) {
+            Snackbar snackbar = Snackbar
+                    .make(mainLayout, "Select movie", Snackbar.LENGTH_SHORT);
+
+            snackbar.show();
 
         }
     }
