@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,8 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
-import com.lucianpiros.traveljournal.data.FirebaseDB;
-import com.lucianpiros.traveljournal.model.Note;
+import com.lucianpiros.traveljournal.service.AddNoteService;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -41,7 +43,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddJournalNoteActivity extends AppCompatActivity implements FirebaseDB.OnDBCompleteListener {
+public class AddJournalNoteActivity extends AppCompatActivity implements AddNoteService.AddNoteServiceListener {
+
+    private static final String TAG = AddJournalNoteActivity.class.getSimpleName();
 
     @BindView(R.id.addnote_mainlayout)
     CoordinatorLayout mainLayout;
@@ -96,7 +100,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         }
     }
 
-    private Date noteCreationDate;
+
     private boolean isAddFABExpanded;
 
     private Dialog alertDialog;
@@ -118,8 +122,6 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
 
         ButterKnife.bind(this);
 
-        FirebaseDB.getInstance().setOnDBCompleteListener(this);
-
         isAddFABExpanded = false;
         expandFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_expand);
         collapseFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_colapse);
@@ -127,9 +129,14 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
         openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_open);
 
         // set not date and time
-        noteCreationDate = new Date();
+        Date noteCreationDate = new Date();
+
+        AddNoteService.getInstance().setNoteCreationDate(noteCreationDate);
+
         SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
         noteDateTV.setText(dateSF.format(noteCreationDate));
+
+        AddNoteService.getInstance().setAddNoteServiceListener(this);
     }
 
     @Override
@@ -160,12 +167,11 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
 
     private void addNote() {
         if (isValid(noteTitleET) && isValid(noteContentET)) {
-            Note note = new Note();
-            note.setNoteTitle(noteTitleET.getText().toString());
-            note.setNoteContent(noteContentET.getText().toString());
-            note.setNoteCreationDate(noteCreationDate);
+            AddNoteService.getInstance().setContentResolver(getContentResolver());
+            AddNoteService.getInstance().setNoteTitle(noteTitleET.getText().toString());
+            AddNoteService.getInstance().setNoteContent(noteContentET.getText().toString());
 
-            FirebaseDB.getInstance().save(note);
+            AddNoteService.getInstance().addNote();
         } else {
             Snackbar snackbar = Snackbar
                     .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);
@@ -262,13 +268,32 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
 
 
     @Override
-    public void onComplete(boolean success) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedPhotoUri = data.getData();
+            AddNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedPhotoUri);
+                notePictureIV.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+        }
+    }
+
+    @Override
+    public void onComplete() {
         Snackbar snackbar = Snackbar
                 .make(mainLayout, getResources().getString(R.string.addnote_success), Snackbar.LENGTH_SHORT);
-        ;
-        if (!success) {
+
+        /*if (!success) {
             snackbar.setText(getResources().getString(R.string.addnote_error));
-        }
+        }*/
 
         snackbar.show();
 
@@ -278,21 +303,5 @@ public class AddJournalNoteActivity extends AppCompatActivity implements Firebas
                 finish();
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
-                && null != data) {
-            Uri selectedImage = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                notePictureIV.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

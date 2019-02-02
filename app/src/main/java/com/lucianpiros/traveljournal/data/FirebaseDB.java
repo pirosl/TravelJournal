@@ -1,5 +1,7 @@
 package com.lucianpiros.traveljournal.data;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -12,18 +14,23 @@ import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.model.Note;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 
 public class FirebaseDB {
+
+    private static final String TAG = FirebaseDB.class.getSimpleName();
 
     public interface NoteDBEventsListener {
         public void OnNotesListChanged(List<Note> notesList);
     }
 
     public interface OnDBCompleteListener {
-        public void onComplete(boolean success);
+        public void onInsertComplete(boolean success, String key);
+        public void onUpdateComplete(boolean success);
     }
 
     private static FirebaseDB firebaseDB = null;
@@ -60,22 +67,35 @@ public class FirebaseDB {
         this.onDBCompleteListener = onDBCompleteListener;
     }
 
-    public Boolean save(@NonNull Note note) {
-        Boolean saved = false;
-
+    public void insert(@NonNull Note note) {
         try {
-            databaseReference.child("notes").push().setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+            DatabaseReference childRefference = databaseReference.child("notes").push();
+            childRefference.setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    onDBCompleteListener.onComplete(task.isSuccessful());
+                    String childKey = null;
+                    if(task.isSuccessful()) {
+                        childKey = childRefference.getKey();
+                    }
+                    onDBCompleteListener.onInsertComplete(task.isSuccessful(), childKey);
                 }
             });
-            saved = true;
         }catch (DatabaseException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
+    }
 
-        return saved;
+    public void update(String path, @NotNull Note note) {
+        DatabaseReference notesRef = databaseReference.child("notes");
+        Map<String, Object> noteUpdate = new HashMap<>();
+        noteUpdate.put(path, note);
+
+        notesRef.updateChildren(noteUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                onDBCompleteListener.onUpdateComplete(task.isSuccessful());
+            }
+        });;
     }
 
     public ArrayList<Note> retrieveNotes() {

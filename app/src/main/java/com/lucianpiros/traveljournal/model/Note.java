@@ -9,9 +9,13 @@ public class Note {
     private String noteTitle;
     private String noteContent;
     private Date noteCreationDate;
-
+    private String photoDownloadURL;
 
     public Note() {
+        noteTitle = null;
+        noteContent = null;
+        noteCreationDate = null;
+        photoDownloadURL = null;
     }
 
     public String getNoteTitle() {
@@ -38,4 +42,11 @@ public class Note {
         this.noteCreationDate = noteCreationDate;
     }
 
+    public String getPhotoDownloadURL() {
+        return photoDownloadURL;
+    }
+
+    public void setPhotoDownloadURL(String photoDownloadURL) {
+        this.photoDownloadURL = photoDownloadURL;
+    }
 }
