@@ -27,6 +27,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
     private String noteContent;
     private Date noteCreationDate;
     private Uri selectedPhotoUri;
+    private Uri selectedVideoUri;
     private ContentResolver contentResolver;
 
     private String childKey;
@@ -63,6 +64,10 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
 
     public void setSelectedPhotoUri(Uri selectedPhotoUri) {
         this.selectedPhotoUri = selectedPhotoUri;
+    }
+
+    public void setSelectedVideoUri(Uri selectedVideoUri) {
+        this.selectedVideoUri = selectedVideoUri;
     }
 
     public void setContentResolver(ContentResolver contentResolver) {

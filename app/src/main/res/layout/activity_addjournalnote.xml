@@ -48,6 +48,13 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
+
+                    <com.google.android.exoplayer2.ui.PlayerView
+                        android:id="@+id/note_video"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible"
+                        android:layout_weight="1" />
                 </LinearLayout>
 
                 <EditText

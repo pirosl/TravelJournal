@@ -289,10 +289,20 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
                 Log.e(TAG, e.getMessage());
             }
         }
-        if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
+
+        if (requestCode == CustomAlertDialog.TAKE_VIDEO && resultCode == RESULT_OK
                 && null != data) {
+
+            Cursor returnCursor =
+                    getContentResolver().query(data.getData(), null, null, null, null);
+            assert returnCursor != null;
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            String name = returnCursor.getString(nameIndex);
+            returnCursor.close();
+
             Snackbar snackbar = Snackbar
-                    .make(mainLayout, "Select movie", Snackbar.LENGTH_SHORT);
+                    .make(mainLayout, "Select movie " + name, Snackbar.LENGTH_SHORT);
 
             snackbar.show();
 
