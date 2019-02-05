@@ -1,15 +1,21 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.Manifest;
 import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.lucianpiros.traveljournal.R;
@@ -20,8 +26,10 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.mainactivity_viewpager) ViewPager viewPager;
-    @BindView(R.id.mainactivity_tabs) TabLayout tabLayout;
+    @BindView(R.id.mainactivity_viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.mainactivity_tabs)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,23 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    0);
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    0);
+        }
     }
 
     class JournalFramentPagerAdapter extends FragmentPagerAdapter {
@@ -59,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             //if (position == 0) {
-                JournalNotesFragment fragment = new JournalNotesFragment();
+            JournalNotesFragment fragment = new JournalNotesFragment();
 
-                return fragment;
+            return fragment;
             //}
             //return null;
         }
