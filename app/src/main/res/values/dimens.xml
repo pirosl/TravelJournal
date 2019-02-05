@@ -15,4 +15,9 @@
     <dimen name="buttonstroke_width">2dp</dimen>
     <dimen name="button_corner_radius">6dp</dimen>
     <dimen name="alertdialog_button_margin">16dp</dimen>
+
+    <dimen name="imagebutton_width">60dp</dimen>
+    <dimen name="imagebutton_horizontal_padding">4dp</dimen>
+    <dimen name="imagebutton_vertical_padding">2dp</dimen>
+    <dimen name="imagebutton_horizontal_margin">2dp</dimen>
 </resources>

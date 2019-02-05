@@ -50,4 +50,16 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="ImageButton">
+        <item name="android:tint">@color/colorSecondary</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@drawable/imagebutton_background</item>
+        <item name="android:paddingLeft">@dimen/imagebutton_horizontal_padding</item>
+        <item name="android:paddingStart">@dimen/imagebutton_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/imagebutton_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/imagebutton_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/imagebutton_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/imagebutton_vertical_padding</item>
+    </style>
+
 </resources>

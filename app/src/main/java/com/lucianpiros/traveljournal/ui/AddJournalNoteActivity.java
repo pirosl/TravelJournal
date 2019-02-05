@@ -2,15 +2,9 @@ package com.lucianpiros.traveljournal.ui;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,7 +23,6 @@ import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -59,8 +51,11 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     EditText noteTitleET;
     @BindView(R.id.note_date)
     TextView noteDateTV;
-    @BindView(R.id.note_picture)
-    ImageView notePictureIV;
+    @BindView(R.id.note_picture_btn)
+    ImageButton notePictureBT;
+    @BindView(R.id.note_movie_btn)
+    ImageButton noteMovieBT;
+
     @BindView(R.id.note_content)
     EditText noteContentET;
 
@@ -107,13 +102,13 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
 
     protected void launchIntent(int dialogType) {
-        if(dialogType == CustomAlertDialog.TAKE_PHOTO) {
+        if (dialogType == CustomAlertDialog.TAKE_PHOTO) {
             Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             takephotoIntent.setType("image/*");
             startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
         }
-        if(dialogType == CustomAlertDialog.TAKE_VIDEO) {
+        if (dialogType == CustomAlertDialog.TAKE_VIDEO) {
             Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT,
                     android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
             takevideoIntent.setType("video/*");
@@ -277,35 +272,19 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        annimateAddFAB();
+
         if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
                 && null != data) {
             Uri selectedPhotoUri = data.getData();
             AddNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedPhotoUri);
-                notePictureIV.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-            }
+            notePictureBT.setVisibility(View.VISIBLE);
         }
-
         if (requestCode == CustomAlertDialog.TAKE_VIDEO && resultCode == RESULT_OK
                 && null != data) {
-
-            Cursor returnCursor =
-                    getContentResolver().query(data.getData(), null, null, null, null);
-            assert returnCursor != null;
-            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-            returnCursor.moveToFirst();
-            String name = returnCursor.getString(nameIndex);
-            returnCursor.close();
-
-            Snackbar snackbar = Snackbar
-                    .make(mainLayout, "Select movie " + name, Snackbar.LENGTH_SHORT);
-
-            snackbar.show();
-
+            Uri selectedVideoUri = data.getData();
+            AddNoteService.getInstance().setSelectedPhotoUri(selectedVideoUri);
+            noteMovieBT.setVisibility(View.VISIBLE);
         }
     }
 
