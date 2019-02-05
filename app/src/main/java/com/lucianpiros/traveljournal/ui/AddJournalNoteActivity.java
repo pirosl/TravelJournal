@@ -4,16 +4,19 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -25,6 +28,7 @@ import com.lucianpiros.traveljournal.service.AddNoteService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,6 +59,8 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     ImageButton notePictureBT;
     @BindView(R.id.note_movie_btn)
     ImageButton noteMovieBT;
+    @BindView(R.id.progressbarholder)
+    FrameLayout  progressBarHolder;
 
     @BindView(R.id.note_content)
     EditText noteContentET;
@@ -100,6 +106,8 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     private Dialog alertDialog;
 
     private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
+
+    private ProgressBarTask progressBarTask;
 
     protected void launchIntent(int dialogType) {
         if (dialogType == CustomAlertDialog.TAKE_PHOTO) {
@@ -187,6 +195,9 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     private void addNote() {
         if (isValid(noteTitleET) && isValid(noteContentET)) {
+            progressBarTask = new ProgressBarTask();
+            progressBarTask.execute();
+
             AddNoteService.getInstance().setContentResolver(getContentResolver());
             AddNoteService.getInstance().setNoteTitle(noteTitleET.getText().toString());
             AddNoteService.getInstance().setNoteContent(noteContentET.getText().toString());
@@ -309,6 +320,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     @Override
     public void onComplete() {
+        progressBarTask.cancel(true);
         Snackbar snackbar = Snackbar
                 .make(mainLayout, getResources().getString(R.string.addnote_success), Snackbar.LENGTH_SHORT);
 
@@ -324,5 +336,41 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
                 finish();
             }
         });
+    }
+
+    private class ProgressBarTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBarHolder.setVisibility(View.VISIBLE);
+            AlphaAnimation inAnimation = new AlphaAnimation(0f, 1f);
+            inAnimation.setDuration(200);
+            progressBarHolder.setAnimation(inAnimation);
+            progressBarHolder.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressBarHolder.setVisibility(View.GONE);
+            AlphaAnimation outAnimation = new AlphaAnimation(1f, 0f);
+            outAnimation.setDuration(200);
+            progressBarHolder.setAnimation(outAnimation);
+            progressBarHolder.setVisibility(View.GONE);
+            AddJournalNoteActivity.this.finish();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                while(true) {
+                    TimeUnit.SECONDS.sleep(1);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }
