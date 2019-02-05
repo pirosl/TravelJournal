@@ -10,12 +10,14 @@ public class Note {
     private String noteContent;
     private Date noteCreationDate;
     private String photoDownloadURL;
+    private String movieDownloadURL;
 
     public Note() {
         noteTitle = null;
         noteContent = null;
         noteCreationDate = null;
         photoDownloadURL = null;
+        movieDownloadURL = null;
     }
 
     public String getNoteTitle() {
@@ -48,5 +50,13 @@ public class Note {
 
     public void setPhotoDownloadURL(String photoDownloadURL) {
         this.photoDownloadURL = photoDownloadURL;
+    }
+
+    public void setMovieDownloadURL(String movieDownloadURL) {
+        this.movieDownloadURL = movieDownloadURL;
+    }
+
+    public String getMovieDownloadURL() {
+        return movieDownloadURL;
     }
 }

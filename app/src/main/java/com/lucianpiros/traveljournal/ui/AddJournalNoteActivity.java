@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,17 +23,22 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.annotations.NotNull;
+import com.lucianpiros.traveljournal.BuildConfig;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
 import com.lucianpiros.traveljournal.ui.widget.CustomAlertDialog;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +47,15 @@ import butterknife.OnClick;
 public class AddJournalNoteActivity extends AppCompatActivity implements AddNoteService.AddNoteServiceListener, CustomAlertDialog.CustomDialogActionListener {
 
     private static final String TAG = AddJournalNoteActivity.class.getSimpleName();
+
+    private static final int PHOTO = 1;
+    private static final int VIDEO = 2;
+    private static final int PICK_PHOTO = 1;
+    private static final int PICK_VIDEO = 2;
+    private static final int TAKE_PHOTO = 3;
+    private static final int RECORD_VIDEO = 4;
+
+
 
     @BindView(R.id.addnote_mainlayout)
     CoordinatorLayout mainLayout;
@@ -187,7 +204,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     @OnClick(R.id.fab_addpicture)
     protected void addPicture() {
-        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_PHOTO, this.getLayoutInflater(), this);
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(PHOTO, this.getLayoutInflater(), this);
         customAlertDialog.setCustomDialogActionListener(this);
         customAlertDialog.initialize(viewGroup, R.string.add_photo, R.string.add_photo_option1, R.string.add_photo_option2, R.string.add_photo_option3);
         customAlertDialog.show();
@@ -195,7 +212,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     @OnClick(R.id.fab_addmovie)
     protected void addMovie() {
-        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_VIDEO, this.getLayoutInflater(), this);
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(VIDEO, this.getLayoutInflater(), this);
         customAlertDialog.setCustomDialogActionListener(this);
         customAlertDialog.initialize(viewGroup, R.string.add_video, R.string.add_video_option1, R.string.add_video_option2, R.string.add_video_option3);
         customAlertDialog.show();
@@ -207,16 +224,17 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
         annimateAddFAB();
 
-        if (requestCode == CustomAlertDialog.TAKE_PHOTO && resultCode == RESULT_OK
+        if ((requestCode == PICK_PHOTO || requestCode == TAKE_PHOTO)
+                && resultCode == RESULT_OK
                 && null != data) {
             Uri selectedPhotoUri = data.getData();
             AddNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
             notePictureBT.setVisibility(View.VISIBLE);
         }
-        if (requestCode == CustomAlertDialog.TAKE_VIDEO && resultCode == RESULT_OK
+        if (requestCode == PICK_VIDEO && resultCode == RESULT_OK
                 && null != data) {
             Uri selectedVideoUri = data.getData();
-            AddNoteService.getInstance().setSelectedPhotoUri(selectedVideoUri);
+            AddNoteService.getInstance().setSelectedVideoUri(selectedVideoUri);
             noteMovieBT.setVisibility(View.VISIBLE);
         }
     }
@@ -242,21 +260,42 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     }
 
     public void onOption1(int dialogType) {
+    /*    if (dialogType == PHOTO) {
+            Intent takephotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if(takephotoIntent.resolveActivity(getPackageManager()) != null){
+                String timeStamp =
+                        new SimpleDateFormat("yyyyMMdd_HHmmss",
+                                Locale.getDefault()).format(new Date());
+                String file = "IMG_" + timeStamp +".jpg";
+                File newfile = new File(file);
+                try {
+                    newfile.createNewFile();
+                }
+                catch (IOException e)
+                {
+                }
 
+                //     Uri outputFileUri = Uri.fromFile(newfile);
+                Uri outputFileUri = FileProvider.getUriForFile(AddJournalNoteActivity.this, BuildConfig.APPLICATION_ID, newfile);
+
+                    takephotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                    startActivityForResult(takephotoIntent, TAKE_PHOTO);
+            }
+        }*/
     }
 
     public void onOption2(int dialogType) {
-        if (dialogType == CustomAlertDialog.TAKE_PHOTO) {
+        if (dialogType == PHOTO) {
             Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             takephotoIntent.setType("image/*");
-            startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
+            startActivityForResult(takephotoIntent, PICK_PHOTO);
         }
-        if (dialogType == CustomAlertDialog.TAKE_VIDEO) {
+        if (dialogType == VIDEO) {
             Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT,
                     android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
             takevideoIntent.setType("video/*");
-            startActivityForResult(takevideoIntent, CustomAlertDialog.TAKE_VIDEO);
+            startActivityForResult(takevideoIntent, PICK_VIDEO);
         }
     }
 

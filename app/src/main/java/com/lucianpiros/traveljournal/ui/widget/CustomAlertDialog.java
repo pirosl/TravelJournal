@@ -17,9 +17,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CustomAlertDialog {
-    public static final int TAKE_PHOTO = 1;
-    public static final int TAKE_VIDEO = 2;
-
     public interface CustomDialogActionListener {
         public void onOption1(int dialogType);
         public void onOption2(int dialogType);
@@ -37,6 +34,12 @@ public class CustomAlertDialog {
         Button option2BT;
         @BindView(R.id.button_option3)
         Button option3BT;
+
+        @OnClick(R.id.button_option1)
+        protected void onOption1() {
+            alertDialog.dismiss();
+            customDialogActionListener.onOption1(dialogType);
+        }
 
         @OnClick(R.id.button_option2)
         protected void onOption2() {

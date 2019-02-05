@@ -1,6 +1,7 @@
 package com.lucianpiros.traveljournal.data;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,9 +16,11 @@ import java.io.InputStream;
 import androidx.annotation.NonNull;
 
 public class FirebaseCS {
+    private static final String TAG = FirebaseCS.class.getSimpleName();
 
     public interface FileUploaderListener {
-        public void onPhotoUploaded (String downloadUri);
+        public void onPhotoUploaded(String downloadUri);
+        public void onMovieUploaded(String downloadUri);
     }
 
     private static final String FIREBASE_STORAGE_BUCKET = "gs://traveljournal-bedf8.appspot.com";
@@ -70,18 +73,43 @@ public class FirebaseCS {
                 try {
                     photoStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, "Error saving file on Firebase Cloud Storage " + e.getMessage());
                 }
 
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-                    //Picasso.get().load(downloadUri.toString()).into(image);
                     fileUploaderListener.onPhotoUploaded(downloadUri.toString());
                 } else {
-                    // Handle failures
+                    Log.d(TAG, "File not uploaded on Firebase Cloud Stoarage");
                 }
+            }
+        });
+    }
 
+    public void uploadMovie(String child, String fileName, Uri movieUri) {
 
+        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(FIREBASE_STORAGE_BUCKET);
+        StorageReference photoRef = storageRef.child(child).child(fileName);
+
+        UploadTask uploadTask = photoRef.putFile(movieUri);
+
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return photoRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    fileUploaderListener.onMovieUploaded(downloadUri.toString());
+                } else {
+                    Log.d(TAG, "File not uploaded on Firebase Cloud Stoarage");
+                }
             }
         });
     }

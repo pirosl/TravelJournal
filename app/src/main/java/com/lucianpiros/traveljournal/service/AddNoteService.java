@@ -1,15 +1,14 @@
 package com.lucianpiros.traveljournal.service;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.OpenableColumns;
 import android.util.Log;
 
 import com.lucianpiros.traveljournal.data.FirebaseCS;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
@@ -18,7 +17,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
     private final static String TAG = AddNoteService.class.getSimpleName();
 
     public interface AddNoteServiceListener {
-        public void onComplete();
+        void onComplete();
     }
 
     private static AddNoteService addNoteService = null;
@@ -33,6 +32,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
     private String childKey;
 
     private Note note;
+    private int updatesPerformed;
 
     private AddNoteServiceListener addNoteServiceListener;
 
@@ -89,17 +89,15 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
 
     @Override
     public void onInsertComplete(boolean success, String childKey) {
+        updatesPerformed = 0;
         if(selectedPhotoUri != null) {
             this.childKey = childKey;
-            Cursor returnCursor =
-                    contentResolver.query(selectedPhotoUri, null, null, null, null);
-            assert returnCursor != null;
-            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-            returnCursor.moveToFirst();
-            String name = returnCursor.getString(nameIndex);
-            returnCursor.close();
+            String name = getName(selectedPhotoUri);
 
             try {
+                synchronized (this) {
+                    updatesPerformed++;
+                }
                 InputStream imageStream = contentResolver.openInputStream(selectedPhotoUri);
                 FirebaseCS.getInstance().uploadPhoto(childKey, name, imageStream);
             } catch (FileNotFoundException e) {
@@ -107,18 +105,67 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
             }
         }
         else {
-            addNoteServiceListener.onComplete();
+            if(selectedVideoUri != null) {
+                synchronized (this) {
+                    updatesPerformed++;
+                }
+                this.childKey = childKey;
+                String name = getName(selectedVideoUri);
+
+                FirebaseCS.getInstance().uploadMovie(childKey, name, selectedVideoUri);
+            }
+            else {
+                complete();
+            }
         }
+    }
+
+    private String getName(Uri uri) {
+        File file= new File(uri.getPath());
+        String name = file.getName();
+        return name;
     }
 
     @Override
     public void onUpdateComplete(boolean success) {
-        addNoteServiceListener.onComplete();
+        synchronized (this) {
+            updatesPerformed--;
+        }
+        if(updatesPerformed == 0)
+            complete();
     }
 
     @Override
     public void onPhotoUploaded(String downloadUri) {
         note.setPhotoDownloadURL(downloadUri);
         FirebaseDB.getInstance().update(childKey, note);
+
+        if(selectedVideoUri != null) {
+            synchronized (this) {
+                updatesPerformed++;
+            }
+            String name = getName(selectedVideoUri);
+
+            FirebaseCS.getInstance().uploadMovie(childKey, name, selectedVideoUri);
+        }
+        else {
+            complete();
+        }
+    }
+
+    @Override
+    public void onMovieUploaded(String downloadUri) {
+        note.setMovieDownloadURL(downloadUri);
+        FirebaseDB.getInstance().update(childKey, note);
+    }
+
+    private void complete() {
+        noteTitle = null;
+        noteContent = null;
+        noteCreationDate = null;
+        selectedPhotoUri = null;
+        selectedVideoUri = null;
+
+        addNoteServiceListener.onComplete();
     }
 }
