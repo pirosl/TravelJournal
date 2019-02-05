@@ -83,32 +83,33 @@ public class MainActivity extends AppCompatActivity {
         // This determines the fragment for each tab
         @Override
         public Fragment getItem(int position) {
-            //if (position == 0) {
-            JournalNotesFragment fragment = new JournalNotesFragment();
+            if (position == 0) {
+                JournalNotesFragment notesFragment = new JournalNotesFragment();
 
-            return fragment;
-            //}
-            //return null;
+                return notesFragment;
+            }
+
+            AdventuresFragment adventuresFragment = new AdventuresFragment();
+            return adventuresFragment;
         }
 
-        // This determines the number of tabs
         @Override
         public int getCount() {
             return 4;
         }
 
-        // This determines the title for each tab
         @Override
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
             switch (position) {
                 case 0:
+                    return mContext.getString(R.string.tab_notes);
                 case 1:
+                    return mContext.getString(R.string.tab_adventures);
                 case 2:
+                    return mContext.getString(R.string.tab_map);
                 case 3:
-                    return "Journal Notes";//mContext.getString(R.string.category_usefulinfo);
-                //case 1:
-                //   return "Steps";//mContext.getString(R.string.category_places);
+                    return mContext.getString(R.string.tab_calendar);
                 default:
                     return null;
             }

@@ -22,4 +22,10 @@
     <string name="addnotestate_date" translatable="false">addnotestate_date</string>
     <string name="addnotestate_picture" translatable="false">addnotestate_picture</string>
     <string name="addnotestate_movie" translatable="false">addnotestate_movie</string>
+
+    <string name="tab_notes">Notes</string>
+    <string name="tab_adventures">Adventures</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_calendar">Calendar</string>
+
 </resources>
