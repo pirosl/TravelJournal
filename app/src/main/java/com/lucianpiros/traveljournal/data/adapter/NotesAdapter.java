@@ -1,5 +1,6 @@
 package com.lucianpiros.traveljournal.data.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,8 +8,10 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.model.Note;
+import com.lucianpiros.traveljournal.service.GlideApp;
 
 import java.util.List;
 
@@ -30,6 +33,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.notetitle) TextView noteTitleTV;
         @BindView(R.id.notecontent) TextView noteContentTV;
+        @BindView(R.id.noteimage) ImageView noteImageIV;
 
         public ViewHolder(View view) {
             super(view);
@@ -67,6 +71,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         // Populate the data into the template view using the data object
         holder.noteTitleTV.setText(recipe.getNoteTitle());
         holder.noteContentTV.setText(recipe.getNoteContent());
+
+        String recipePhotoURL = recipe.getPhotoDownloadURL();
+        if(recipePhotoURL != null) {
+            Log.d("Test", "image at " + position);
+            GlideApp.with(holder.itemView.getContext()).load(recipePhotoURL).into(holder.noteImageIV);
+        }
     }
 
     @Override

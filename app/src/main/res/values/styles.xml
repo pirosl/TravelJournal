@@ -62,4 +62,10 @@
         <item name="android:paddingBottom">@dimen/imagebutton_vertical_padding</item>
     </style>
 
+    <style name="ImageView">
+        <item name="android:scaleType">center</item>
+        <item name="android:adjustViewBounds">false</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:padding">@dimen/list_image_padding</item>
+    </style>
 </resources>
