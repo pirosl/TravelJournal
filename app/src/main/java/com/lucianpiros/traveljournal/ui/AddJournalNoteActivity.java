@@ -1,12 +1,10 @@
 package com.lucianpiros.traveljournal.ui;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -25,12 +22,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
+import com.lucianpiros.traveljournal.ui.widget.CustomAlertDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -39,7 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddJournalNoteActivity extends AppCompatActivity implements AddNoteService.AddNoteServiceListener {
+public class AddJournalNoteActivity extends AppCompatActivity implements AddNoteService.AddNoteServiceListener, CustomAlertDialog.CustomDialogActionListener {
 
     private static final String TAG = AddJournalNoteActivity.class.getSimpleName();
 
@@ -60,69 +57,16 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     @BindView(R.id.note_movie_btn)
     ImageButton noteMovieBT;
     @BindView(R.id.progressbarholder)
-    FrameLayout  progressBarHolder;
-
+    FrameLayout progressBarHolder;
     @BindView(R.id.note_content)
     EditText noteContentET;
 
-    class CustomAlertDialog {
-        public static final int TAKE_PHOTO = 1;
-        public static final int TAKE_VIDEO = 2;
-
-        private int dialogType;
-
-        public CustomAlertDialog(int dialogType) {
-            this.dialogType = dialogType;
-        }
-
-        class Title {
-            @BindView(R.id.alertdialog_title)
-            TextView valueTV;
-        }
-
-        class Body {
-            @BindView(R.id.button_option1)
-            Button option1BT;
-            @BindView(R.id.button_option2)
-            Button option2BT;
-            @BindView(R.id.button_option3)
-            Button option3BT;
-
-            @OnClick(R.id.button_option2)
-            protected void take_photo_video() {
-                alertDialog.dismiss();
-                AddJournalNoteActivity.this.launchIntent(dialogType);
-            }
-
-            @OnClick(R.id.button_option3)
-            protected void closeAlertDialog() {
-                alertDialog.dismiss();
-            }
-        }
-    }
+    @BindView(android.R.id.content)
+    ViewGroup viewGroup;
 
     private boolean isAddFABExpanded;
-
-    private Dialog alertDialog;
-
     private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
-
     private ProgressBarTask progressBarTask;
-
-    protected void launchIntent(int dialogType) {
-        if (dialogType == CustomAlertDialog.TAKE_PHOTO) {
-            Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            takephotoIntent.setType("image/*");
-            startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
-        }
-        if (dialogType == CustomAlertDialog.TAKE_VIDEO) {
-            Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT,
-                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-            takevideoIntent.setType("video/*");
-            startActivityForResult(takevideoIntent, CustomAlertDialog.TAKE_VIDEO);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,14 +81,13 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         closeFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_close);
         openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_open);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             noteTitleET.setText(savedInstanceState.getString(getString(R.string.addnotestate_title)));
             noteContentET.setText(savedInstanceState.getString(getString(R.string.addnotestate_body)));
             noteDateTV.setText(savedInstanceState.getString(getString(R.string.addnotestate_date)));
             notePictureBT.setVisibility(savedInstanceState.getInt(getString(R.string.addnotestate_picture)));
             noteMovieBT.setVisibility(savedInstanceState.getInt(getString(R.string.addnotestate_movie)));
-        }
-        else {
+        } else {
             // set not date and time
             Date noteCreationDate = new Date();
 
@@ -244,59 +187,19 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     @OnClick(R.id.fab_addpicture)
     protected void addPicture() {
-
-        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_PHOTO);
-        final CustomAlertDialog.Title alertDialogTitle = customAlertDialog.new Title();
-        final CustomAlertDialog.Body alertDialogBody = customAlertDialog.new Body();
-
-        LayoutInflater inflater = this.getLayoutInflater();
-        ViewGroup viewGroup = findViewById(android.R.id.content);
-
-        View titleView = inflater.inflate(R.layout.alertdialolg_title, null);
-        ButterKnife.bind(alertDialogTitle, titleView);
-        alertDialogTitle.valueTV.setText(R.string.add_photo);
-
-        View bodyView = inflater.inflate(R.layout.alertdialog_body, viewGroup, false);
-        ButterKnife.bind(alertDialogBody, bodyView);
-        alertDialogBody.option1BT.setText(R.string.add_photo_option1);
-        alertDialogBody.option2BT.setText(R.string.add_photo_option2);
-        alertDialogBody.option3BT.setText(R.string.add_photo_option3);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddJournalNoteActivity.this).setCustomTitle(titleView);
-
-        builder.setView(bodyView);
-        alertDialog = builder.create();
-
-        alertDialog.show();
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_PHOTO, this.getLayoutInflater(), this);
+        customAlertDialog.setCustomDialogActionListener(this);
+        customAlertDialog.initialize(viewGroup, R.string.add_photo, R.string.add_photo_option1, R.string.add_photo_option2, R.string.add_photo_option3);
+        customAlertDialog.show();
     }
 
     @OnClick(R.id.fab_addmovie)
     protected void addMovie() {
-        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_VIDEO);
-        final CustomAlertDialog.Title alertDialogTitle = customAlertDialog.new Title();
-        final CustomAlertDialog.Body alertDialogBody = customAlertDialog.new Body();
-
-        LayoutInflater inflater = this.getLayoutInflater();
-        ViewGroup viewGroup = findViewById(android.R.id.content);
-
-        View titleView = inflater.inflate(R.layout.alertdialolg_title, null);
-        ButterKnife.bind(alertDialogTitle, titleView);
-        alertDialogTitle.valueTV.setText(R.string.add_video);
-
-        View bodyView = inflater.inflate(R.layout.alertdialog_body, viewGroup, false);
-        ButterKnife.bind(alertDialogBody, bodyView);
-        alertDialogBody.option1BT.setText(R.string.add_video_option1);
-        alertDialogBody.option2BT.setText(R.string.add_video_option2);
-        alertDialogBody.option3BT.setText(R.string.add_video_option3);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddJournalNoteActivity.this).setCustomTitle(titleView);
-
-        builder.setView(bodyView);
-        alertDialog = builder.create();
-
-        alertDialog.show();
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(CustomAlertDialog.TAKE_VIDEO, this.getLayoutInflater(), this);
+        customAlertDialog.setCustomDialogActionListener(this);
+        customAlertDialog.initialize(viewGroup, R.string.add_video, R.string.add_video_option1, R.string.add_video_option2, R.string.add_video_option3);
+        customAlertDialog.show();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -338,6 +241,25 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         });
     }
 
+    public void onOption1(int dialogType) {
+
+    }
+
+    public void onOption2(int dialogType) {
+        if (dialogType == CustomAlertDialog.TAKE_PHOTO) {
+            Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            takephotoIntent.setType("image/*");
+            startActivityForResult(takephotoIntent, CustomAlertDialog.TAKE_PHOTO);
+        }
+        if (dialogType == CustomAlertDialog.TAKE_VIDEO) {
+            Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT,
+                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            takevideoIntent.setType("video/*");
+            startActivityForResult(takevideoIntent, CustomAlertDialog.TAKE_VIDEO);
+        }
+    }
+
     private class ProgressBarTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -364,7 +286,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                while(true) {
+                while (true) {
                     TimeUnit.SECONDS.sleep(1);
                 }
             } catch (InterruptedException e) {
