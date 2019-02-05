@@ -129,15 +129,34 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         closeFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_close);
         openFABAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_open);
 
-        // set not date and time
-        Date noteCreationDate = new Date();
+        if(savedInstanceState != null) {
+            noteTitleET.setText(savedInstanceState.getString(getString(R.string.addnotestate_title)));
+            noteContentET.setText(savedInstanceState.getString(getString(R.string.addnotestate_body)));
+            noteDateTV.setText(savedInstanceState.getString(getString(R.string.addnotestate_date)));
+            notePictureBT.setVisibility(savedInstanceState.getInt(getString(R.string.addnotestate_picture)));
+            noteMovieBT.setVisibility(savedInstanceState.getInt(getString(R.string.addnotestate_movie)));
+        }
+        else {
+            // set not date and time
+            Date noteCreationDate = new Date();
 
-        AddNoteService.getInstance().setNoteCreationDate(noteCreationDate);
+            AddNoteService.getInstance().setNoteCreationDate(noteCreationDate);
 
-        SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
-        noteDateTV.setText(dateSF.format(noteCreationDate));
+            SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
+            noteDateTV.setText(dateSF.format(noteCreationDate));
+        }
 
         AddNoteService.getInstance().setAddNoteServiceListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+        saveInstanceState.putString(getString(R.string.addnotestate_title), noteTitleET.getText().toString());
+        saveInstanceState.putString(getString(R.string.addnotestate_body), noteContentET.getText().toString());
+        saveInstanceState.putString(getString(R.string.addnotestate_date), noteDateTV.getText().toString());
+        saveInstanceState.putInt(getString(R.string.addnotestate_picture), notePictureBT.getVisibility());
+        saveInstanceState.putInt(getString(R.string.addnotestate_movie), noteMovieBT.getVisibility());
     }
 
     @Override

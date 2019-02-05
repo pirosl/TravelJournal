@@ -16,4 +16,10 @@
     <string name="add_video_option1">Record Video</string>
     <string name="add_video_option2">Choose from Gallery</string>
     <string name="add_video_option3">Cancel</string>
+
+    <string name="addnotestate_title" translatable="false">addnotestate_title</string>
+    <string name="addnotestate_body" translatable="false">addnotestate_body</string>
+    <string name="addnotestate_date" translatable="false">addnotestate_date</string>
+    <string name="addnotestate_picture" translatable="false">addnotestate_picture</string>
+    <string name="addnotestate_movie" translatable="false">addnotestate_movie</string>
 </resources>
