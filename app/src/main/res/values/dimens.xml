@@ -24,4 +24,6 @@
     <dimen name="imagebutton_horizontal_margin">2dp</dimen>
 
     <dimen name="alert_imageview_padding">4dp</dimen>
+
+    <dimen name="exoplayer_button_size">100dp</dimen>
 </resources>

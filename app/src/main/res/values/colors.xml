@@ -5,4 +5,6 @@
     <color name="colorAccent">#4FC3F7</color>
     <color name="colorSecondary">#ff729c</color>
     <color name="colorSecondaryDark">#dc527e</color>
+
+    <color name="exoplayer_button_background">#AA4FC3F7</color>
 </resources>
