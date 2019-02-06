@@ -1,6 +1,7 @@
 package com.lucianpiros.traveljournal.ui;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 
 import com.facebook.stetho.Stetho;
@@ -16,9 +17,11 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.service.LocationService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        LocationService.getInstance().setActivity(this);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)

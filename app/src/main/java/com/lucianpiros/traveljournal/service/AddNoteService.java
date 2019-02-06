@@ -84,6 +84,9 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
         note.setNoteContent(noteContent);
         note.setNoteCreationDate(noteCreationDate);
 
+        note.setLatitude(LocationService.getInstance().getLatitude());
+        note.setLongitude(LocationService.getInstance().getLongitude());
+
         FirebaseDB.getInstance().insert(note);
     }
 

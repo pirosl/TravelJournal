@@ -11,6 +11,8 @@ public class Note {
     private Date noteCreationDate;
     private String photoDownloadURL;
     private String movieDownloadURL;
+    private double latitude;
+    private double longitude;
 
     public Note() {
         noteTitle = null;
@@ -58,5 +60,21 @@ public class Note {
 
     public String getMovieDownloadURL() {
         return movieDownloadURL;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
