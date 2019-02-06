@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -112,6 +113,13 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
             SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
             noteDateTV.setText(dateSF.format(noteCreationDate));
+
+            // testing purpose
+            noteTitleET.setText("Title " + new Random().nextInt(1000));
+            noteContentET.setText("Lorem ipsum dolor sit amet, quo nisl ubique ut. Latine delectus comprehensam ex vis. Id per noluisse reformidans, labore eripuit eleifend ut per. Vel cu sint quodsi alterum. Habeo euismod ad duo.\n" +
+                    "\n" +
+                    "Consul aliquam mea id, nullam primis vim ut. Eu sea dico iisque assueverit. Vim et meis errem eleifend. Ex reque verterem nam, in novum zril solet eum. An mei odio disputando, eos sanctus vocibus euripidis cu, nominavi philosophia mei no. Ex corpora antiopam oportere pri, an has paulo viderer.");
+            // end testing
         }
 
         AddNoteService.getInstance().setAddNoteServiceListener(this);
