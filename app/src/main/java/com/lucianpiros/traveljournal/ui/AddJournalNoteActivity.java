@@ -23,6 +23,7 @@ import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
 import com.lucianpiros.traveljournal.ui.widget.CustomAlertDialog;
+import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 
 import java.text.SimpleDateFormat;
@@ -230,6 +231,19 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
         photoDialog.initialize(viewGroup, alertTitle, AddNoteService.getInstance().getSelectedPhotoUri());
         photoDialog.showLocal();
+    }
+
+    @OnClick(R.id.note_movie_btn)
+    protected void showMovie() {
+        MovieAlertDialog movieDialog = new MovieAlertDialog(this.getLayoutInflater(), this);
+        String alertTitle = getString(R.string.photodoalog_defaulttitle);
+        CharSequence uiTitle = noteTitleET.getText();
+        if(uiTitle != null && uiTitle.length() > 0) {
+            alertTitle = uiTitle.toString();
+        }
+
+        movieDialog.initialize(viewGroup, alertTitle, AddNoteService.getInstance().getSelectedVideoUri());
+        movieDialog.showLocal();
     }
 
     @Override
