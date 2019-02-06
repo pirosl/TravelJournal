@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/notetitle"
-                style="@style/Title"
+                style="@style/NoteTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_padding"
@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/notecontent"
-                style="@style/Text"
+                style="@style/NoteText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/list_padding"
