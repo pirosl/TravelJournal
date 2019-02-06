@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/material_dialog_actions_side_by_side_padding_end"
+    android:paddingRight="@dimen/material_dialog_actions_side_by_side_padding_end"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:id="@+id/alertdialog_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/material_dialog_actions_side_by_side_padding_top"
+        android:layout_marginBottom="@dimen/material_dialog_actions_side_by_side_padding_bottom"
+        android:text="AlertDialog Title"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+        android:textColor="@color/material_typography_primary_text_color_light" />
+
+    <ImageButton
+        android:id="@+id/alertdialog_title_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:tint="@color/colorAccent"
+        android:background="@null"
+        android:layout_marginEnd="@dimen/material_dialog_actions_side_by_side_padding_end"
+        android:src="@drawable/ic_close"/>
+
+</LinearLayout>

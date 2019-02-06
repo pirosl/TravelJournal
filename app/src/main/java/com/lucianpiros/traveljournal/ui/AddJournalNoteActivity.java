@@ -5,9 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,23 +20,19 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.annotations.NotNull;
-import com.lucianpiros.traveljournal.BuildConfig;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
 import com.lucianpiros.traveljournal.ui.widget.CustomAlertDialog;
+import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -224,6 +217,19 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         customAlertDialog.setCustomDialogActionListener(this);
         customAlertDialog.initialize(viewGroup, R.string.add_video, R.string.add_video_option1, R.string.add_video_option2, R.string.add_video_option3);
         customAlertDialog.show();
+    }
+
+    @OnClick(R.id.note_picture_btn)
+    protected void showImage() {
+        PhotoAlertDialog photoDialog = new PhotoAlertDialog(this.getLayoutInflater(), this);
+        String alertTitle = getString(R.string.photodoalog_defaulttitle);
+        CharSequence uiTitle = noteTitleET.getText();
+        if(uiTitle != null && uiTitle.length() > 0) {
+            alertTitle = uiTitle.toString();
+        }
+
+        photoDialog.initialize(viewGroup, alertTitle, AddNoteService.getInstance().getSelectedPhotoUri());
+        photoDialog.showLocal();
     }
 
     @Override

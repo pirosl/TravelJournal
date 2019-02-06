@@ -66,8 +66,16 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
         this.selectedPhotoUri = selectedPhotoUri;
     }
 
+    public Uri getSelectedPhotoUri() {
+        return this.selectedPhotoUri;
+    }
+
     public void setSelectedVideoUri(Uri selectedVideoUri) {
         this.selectedVideoUri = selectedVideoUri;
+    }
+
+    public Uri getSelectedVideoUri() {
+        return this.selectedVideoUri;
     }
 
     public void setContentResolver(ContentResolver contentResolver) {
