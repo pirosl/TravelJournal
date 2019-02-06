@@ -223,26 +223,14 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     @OnClick(R.id.note_picture_btn)
     protected void showImage() {
         PhotoAlertDialog photoDialog = new PhotoAlertDialog(this.getLayoutInflater(), this);
-        String alertTitle = getString(R.string.photodoalog_defaulttitle);
-        CharSequence uiTitle = noteTitleET.getText();
-        if(uiTitle != null && uiTitle.length() > 0) {
-            alertTitle = uiTitle.toString();
-        }
-
-        photoDialog.initialize(viewGroup, alertTitle, AddNoteService.getInstance().getSelectedPhotoUri());
+        photoDialog.initialize(viewGroup, AddNoteService.getInstance().getSelectedPhotoUri());
         photoDialog.showLocal();
     }
 
     @OnClick(R.id.note_movie_btn)
     protected void showMovie() {
         MovieAlertDialog movieDialog = new MovieAlertDialog(this.getLayoutInflater(), this);
-        String alertTitle = getString(R.string.photodoalog_defaulttitle);
-        CharSequence uiTitle = noteTitleET.getText();
-        if(uiTitle != null && uiTitle.length() > 0) {
-            alertTitle = uiTitle.toString();
-        }
-
-        movieDialog.initialize(viewGroup, alertTitle, AddNoteService.getInstance().getSelectedVideoUri());
+        movieDialog.initialize(viewGroup, AddNoteService.getInstance().getSelectedVideoUri());
         movieDialog.showLocal();
     }
 

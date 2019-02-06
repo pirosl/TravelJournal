@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
@@ -32,9 +34,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MovieAlertDialog {
-    class Title {
-        @BindView(R.id.alertdialog_title)
-        TextView valueTV;
+    class Body {
+        @BindView(R.id.alertdialog_player)
+        PlayerView playerView;
+
         @BindView(R.id.alertdialog_title_close)
         ImageView closeBT;
 
@@ -42,11 +45,6 @@ public class MovieAlertDialog {
         protected void closeDialog() {
             alertDialog.dismiss();
         }
-    }
-
-    class Body {
-        @BindView(R.id.alertdialog_player)
-        PlayerView playerView;
     }
 
     private LayoutInflater layoutInflater;
@@ -60,20 +58,15 @@ public class MovieAlertDialog {
         this.context = context;
     }
 
-    public void initialize(@NotNull ViewGroup viewGroup, String titleRes, Uri moviewUri) {
-        final Title dialogTitle = new Title();
+    public void initialize(@NotNull ViewGroup viewGroup, Uri moviewUri) {
         dialogBody = new Body();
 
         this.movieUri = moviewUri;
 
-        View titleView = layoutInflater.inflate(R.layout.alertdialog_closabletitle, null);
-        ButterKnife.bind(dialogTitle, titleView);
-        dialogTitle.valueTV.setText(titleRes);
-
         View bodyView = layoutInflater.inflate(R.layout.alertdialog_moviebody, viewGroup, false);
         ButterKnife.bind(dialogBody, bodyView);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context).setCustomTitle(titleView);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setView(bodyView);
         alertDialog = builder.create();
@@ -81,8 +74,8 @@ public class MovieAlertDialog {
     }
 
     public void showLocal() {
-        alertDialog.show();
         initializePlayer(movieUri);
+        alertDialog.show();
     }
 
     private void initializePlayer(Uri uri) {
@@ -92,6 +85,9 @@ public class MovieAlertDialog {
 
         SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
         player.prepare(mediaSource);
+
+        dialogBody.playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+        player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
 
         dialogBody.playerView.setPlayer(player);
     }
