@@ -3,13 +3,11 @@ package com.lucianpiros.traveljournal.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -25,16 +23,17 @@ import com.lucianpiros.traveljournal.service.AddNoteService;
 import com.lucianpiros.traveljournal.ui.widget.CustomAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
+import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.os.ConfigurationCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -102,7 +101,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
             AddNoteService.getInstance().setNoteCreationDate(noteCreationDate);
 
-            SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
+            SimpleDateFormat dateSF = new SimpleDateFormat(getString(R.string.note_dateformat), ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0));
             noteDateTV.setText(dateSF.format(noteCreationDate));
 
             // testing purpose
@@ -154,7 +153,7 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     private void addNote() {
         if (isValid(noteTitleET) && isValid(noteContentET)) {
-            progressBarTask = new ProgressBarTask();
+            progressBarTask = new ProgressBarTask(progressBarHolder, this);
             progressBarTask.execute();
 
             AddNoteService.getInstance().setContentResolver(getContentResolver());
@@ -165,7 +164,6 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
         } else {
             Snackbar snackbar = Snackbar
                     .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);
-            ;
             snackbar.show();
         }
     }
@@ -299,52 +297,14 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
 
     public void onOption2(int dialogType) {
         if (dialogType == PHOTO) {
-            Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            takephotoIntent.setType("image/*");
+            Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            takephotoIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
             startActivityForResult(takephotoIntent, PICK_PHOTO);
         }
         if (dialogType == VIDEO) {
-            Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT,
-                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-            takevideoIntent.setType("video/*");
+            Intent takevideoIntent = new Intent(Intent.ACTION_GET_CONTENT);
+            takevideoIntent.setDataAndType(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*");
             startActivityForResult(takevideoIntent, PICK_VIDEO);
-        }
-    }
-
-    private class ProgressBarTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBarHolder.setVisibility(View.VISIBLE);
-            AlphaAnimation inAnimation = new AlphaAnimation(0f, 1f);
-            inAnimation.setDuration(200);
-            progressBarHolder.setAnimation(inAnimation);
-            progressBarHolder.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressBarHolder.setVisibility(View.GONE);
-            AlphaAnimation outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(200);
-            progressBarHolder.setAnimation(outAnimation);
-            progressBarHolder.setVisibility(View.GONE);
-            AddJournalNoteActivity.this.finish();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                while (true) {
-                    TimeUnit.SECONDS.sleep(1);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 }
