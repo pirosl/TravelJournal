@@ -6,8 +6,8 @@
 
     <item
         android:id="@+id/action_save"
-        android:orderInCategory="300"
-        android:title="User"
         android:icon="@drawable/ic_done"
-        app:showAsAction="ifRoom"></item>
+        android:orderInCategory="300"
+        android:title="@string/addnote_savetitle"
+        app:showAsAction="ifRoom" />
 </menu>

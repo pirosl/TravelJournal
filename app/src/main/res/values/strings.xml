@@ -32,4 +32,6 @@
 
     <string name="noteactivity_extra_param" translatable="false">note_key_param</string>
 
+    <string name="addnote_savetitle">Save</string>
+
 </resources>
