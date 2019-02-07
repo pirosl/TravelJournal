@@ -12,15 +12,6 @@
         android:padding="@dimen/list_padding">
 
         <TextView
-            android:id="@+id/note_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:hint="@string/note_title"
-            android:inputType="text"
-            android:textSize="@dimen/material_typography_regular_title_text_size" />
-
-        <TextView
             android:id="@+id/note_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +62,7 @@
                     android:enabled="true"
                     android:gravity="top"
                     android:isScrollContainer="true"
-                    android:textSize="@dimen/material_typography_regular_body_1_text_size"
+                    android:textSize="@dimen/material_typography_tall_body_1_text_size"
                     android:maxLines="60" />
             </LinearLayout>
         </ScrollView>

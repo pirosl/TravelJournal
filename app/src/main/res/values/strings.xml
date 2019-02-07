@@ -33,5 +33,7 @@
     <string name="noteactivity_extra_param" translatable="false">note_key_param</string>
 
     <string name="addnote_savetitle">Save</string>
+    <string name="viewnote_edittitle">Edit Note</string>
+    <string name="viewnote_deletetitle">Delete Note</string>
 
 </resources>

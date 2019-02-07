@@ -1,7 +1,10 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -16,6 +19,9 @@ import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import java.text.SimpleDateFormat;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,8 +29,6 @@ import butterknife.OnClick;
 
 public class NoteFragment extends Fragment {
 
-    @BindView(R.id.note_title)
-    TextView noteTitleTV;
     @BindView(R.id.note_date)
     TextView noteDateTV;
     @BindView(R.id.note_picture_btn)
@@ -33,13 +37,18 @@ public class NoteFragment extends Fragment {
     ImageButton noteMovieBT;
     @BindView(R.id.note_content)
     TextView noteContentTV;
-  //  @BindView(android.R.id.content)
-    private ViewGroup viewGroup;
 
+    private ViewGroup viewGroup;
     private LayoutInflater layoutInflater;
     private Note note;
 
     public NoteFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @NonNull
@@ -64,7 +73,7 @@ public class NoteFragment extends Fragment {
 
         note = FirebaseDB.getInstance().getNote(noteIdx);
 
-        noteTitleTV.setText(note.getNoteTitle());
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(note.getNoteTitle());
         noteContentTV.setText(note.getNoteContent());
 
         SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
@@ -81,6 +90,24 @@ public class NoteFragment extends Fragment {
         }
 
         return noteView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.viewnote_menu, menu);
+
+        // change tint color
+        changeTintColor(menu, R.id.action_edit);
+        changeTintColor(menu, R.id.action_delete);
+    }
+
+    private void changeTintColor(Menu menu, int menuRid) {
+        Drawable drawable = menu.findItem(menuRid).getIcon();
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), R.color.colorAccent));
+        menu.findItem(menuRid).setIcon(drawable);
     }
 
     @OnClick(R.id.note_picture_btn)
