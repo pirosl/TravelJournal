@@ -2,24 +2,31 @@ package com.lucianpiros.traveljournal.ui;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
-import com.lucianpiros.traveljournal.service.AddNoteService;
+import com.lucianpiros.traveljournal.service.DeleteNoteService;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
+import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import java.text.SimpleDateFormat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
@@ -27,8 +34,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NoteFragment extends Fragment {
+public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNoteServiceListener {
 
+    @BindView(R.id.viewnote_mainlayout)
+    CoordinatorLayout mainLayout;
     @BindView(R.id.note_date)
     TextView noteDateTV;
     @BindView(R.id.note_picture_btn)
@@ -37,10 +46,13 @@ public class NoteFragment extends Fragment {
     ImageButton noteMovieBT;
     @BindView(R.id.note_content)
     TextView noteContentTV;
+    @BindView(R.id.progressbarholder)
+    FrameLayout progressBarHolder;
 
     private ViewGroup viewGroup;
     private LayoutInflater layoutInflater;
     private Note note;
+    private ProgressBarTask progressBarTask;
 
     public NoteFragment() {
     }
@@ -110,10 +122,51 @@ public class NoteFragment extends Fragment {
         menu.findItem(menuRid).setIcon(drawable);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteNote();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void deleteNote() {
+        progressBarTask = new ProgressBarTask(progressBarHolder, getActivity());
+        progressBarTask.execute();
+
+        DeleteNoteService.getInstance().setDeleteNoteServiceListener(this);
+        DeleteNoteService.getInstance().deleteNote(note);
+    }
+
     @OnClick(R.id.note_picture_btn)
     protected void showImage() {
         PhotoAlertDialog photoDialog = new PhotoAlertDialog(layoutInflater, this.getContext());
         photoDialog.initialize(viewGroup);
         photoDialog.showRemote(note.getPhotoDownloadURL());
+    }
+
+    @Override
+    public void onComplete() {
+        progressBarTask.cancel(true);
+        Snackbar snackbar = Snackbar
+                .make(mainLayout, getResources().getString(R.string.deletenote_success), Snackbar.LENGTH_SHORT);
+
+        /*if (!success) {
+            snackbar.setText(getResources().getString(R.string.addnote_error));
+        }*/
+
+        snackbar.show();
+
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                getActivity().finish();
+            }
+        });
+
     }
 }

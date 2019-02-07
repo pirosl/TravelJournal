@@ -22,15 +22,20 @@ import androidx.annotation.NonNull;
 
 public class FirebaseDB {
 
+    private interface DatabaseStructure {
+        String NotesTable = "notes";
+    }
+
     private static final String TAG = FirebaseDB.class.getSimpleName();
 
     public interface NoteDBEventsListener {
-        public void OnNotesListChanged(List<Note> notesList);
+        void OnNotesListChanged(List<Note> notesList);
     }
 
     public interface OnDBCompleteListener {
-        public void onInsertComplete(boolean success, String key);
-        public void onUpdateComplete(boolean success);
+        void onInsertComplete(boolean success, String key);
+        void onUpdateComplete(boolean success);
+        void onDeleteComplete(boolean success);
     }
 
     private static FirebaseDB firebaseDB = null;
@@ -71,7 +76,7 @@ public class FirebaseDB {
 
     public void insert(@NonNull Note note) {
         try {
-            DatabaseReference childRefference = databaseReference.child("notes").push();
+            DatabaseReference childRefference = databaseReference.child(DatabaseStructure.NotesTable).push();
             childRefference.setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -89,7 +94,7 @@ public class FirebaseDB {
 
     public void update(String noteKey, @NotNull Note note) {
         note.setNoteKey(noteKey);
-        DatabaseReference notesRef = databaseReference.child("notes");
+        DatabaseReference notesRef = databaseReference.child(DatabaseStructure.NotesTable);
         Map<String, Object> noteUpdate = new HashMap<>();
         noteUpdate.put(noteKey, note);
 
@@ -119,7 +124,9 @@ public class FirebaseDB {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                fetchData(dataSnapshot);
 
+                noteDBEventsListener.OnNotesListChanged(notes);
             }
 
             @Override
@@ -152,5 +159,15 @@ public class FirebaseDB {
             notes.add(name);
             notesMap.put(ds.getKey(), name);
         }
+    }
+
+    public void deleteNote(@NotNull Note note) {
+        DatabaseReference notesRef = databaseReference.child(DatabaseStructure.NotesTable).child(note.getNoteKey());
+        notesRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                onDBCompleteListener.onDeleteComplete(task.isSuccessful());
+            }
+        });
     }
 }

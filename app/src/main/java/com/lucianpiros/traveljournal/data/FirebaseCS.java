@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -19,8 +21,15 @@ public class FirebaseCS {
     private static final String TAG = FirebaseCS.class.getSimpleName();
 
     public interface FileUploaderListener {
-        public void onPhotoUploaded(String downloadUri);
-        public void onMovieUploaded(String downloadUri);
+        void onPhotoUploaded(String downloadUri);
+        void onMovieUploaded(String downloadUri);
+    }
+
+    public interface FileDeleteListener {
+        int PHOTO = 1;
+        int MOVIE = 2;
+
+        void onFileDelete(int fileType, boolean success);
     }
 
     private static final String FIREBASE_STORAGE_BUCKET = "gs://traveljournal-bedf8.appspot.com";
@@ -30,6 +39,7 @@ public class FirebaseCS {
     private FirebaseStorage firebaseStorage;
 
     private FileUploaderListener fileUploaderListener;
+    private FileDeleteListener fileDeleteListener;
 
 
     /**
@@ -52,8 +62,11 @@ public class FirebaseCS {
         this.fileUploaderListener = fileUploaderListener;
     }
 
-    public void uploadPhoto(String child, String fileName, InputStream photoStream) {
+    public void setFileDeleteListener(FileDeleteListener fileDeleteListener) {
+        this.fileDeleteListener = fileDeleteListener;
+    }
 
+    public void uploadPhoto(String child, String fileName, InputStream photoStream) {
         StorageReference storageRef = firebaseStorage.getReferenceFromUrl(FIREBASE_STORAGE_BUCKET);
         StorageReference photoRef = storageRef.child(child).child(fileName);
 
@@ -110,6 +123,26 @@ public class FirebaseCS {
                 } else {
                     Log.d(TAG, "File not uploaded on Firebase Cloud Stoarage");
                 }
+            }
+        });
+    }
+
+    public void deleteFile(String child, String fileName, int fileType) {
+        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(FIREBASE_STORAGE_BUCKET);
+        StorageReference fileRef = storageRef.child(child).child(fileName);
+
+        Task<Void> deleteTask = fileRef.delete();
+
+        deleteTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                fileDeleteListener.onFileDelete(fileType, true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d(TAG, exception.getMessage());
+                fileDeleteListener.onFileDelete(fileType, false);
             }
         });
     }

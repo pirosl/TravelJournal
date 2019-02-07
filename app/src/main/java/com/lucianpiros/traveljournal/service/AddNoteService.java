@@ -110,6 +110,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
                     updatesPerformed++;
                 }
                 InputStream imageStream = contentResolver.openInputStream(selectedPhotoUri);
+                note.setPhotoFileName(name);
                 FirebaseCS.getInstance().uploadPhoto(noteKey, name, imageStream);
             } catch (FileNotFoundException e) {
                 Log.d(TAG, e.getMessage());
@@ -122,7 +123,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
                 }
                 this.noteKey = noteKey;
                 String name = getName(selectedVideoUri);
-
+                note.setMovieFileName(name);
                 FirebaseCS.getInstance().uploadMovie(noteKey, name, selectedVideoUri);
             }
             else {
@@ -151,6 +152,11 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
     }
 
     @Override
+    public void onDeleteComplete(boolean success) {
+        // nothing to do here
+    }
+
+    @Override
     public void onPhotoUploaded(String downloadUri) {
         note.setPhotoDownloadURL(downloadUri);
         FirebaseDB.getInstance().update(noteKey, note);
@@ -160,7 +166,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
                 updatesPerformed++;
             }
             String name = getName(selectedVideoUri);
-
+            note.setMovieFileName(name);
             FirebaseCS.getInstance().uploadMovie(noteKey, name, selectedVideoUri);
         }
         else {
