@@ -6,7 +6,9 @@
     <string name="addnote_success">Note saved</string>
     <string name="addnote_error">Error saving note</string>
     <string name="notetitleorcontent_empty">Note title or note content null. Note can\'t be saved</string>
+
     <string name="deletenote_success">Note deleted</string>
+    <string name="deletenote_confirmationdialogtitle">Want to delete note?</string>
 
     <string name="add_photo">Add Photo</string>
     <string name="add_photo_option1">Take Photo</string>
@@ -41,5 +43,7 @@
 
     <string name="note_picture_contentdescription">Picture associated with current note</string>
     <string name="note_movie_contentdescription">Movie associated with current note</string>
+    <string name="alerdialog_acceptbutton_contentdescription">Yes button</string>
+    <string name="alerdialog_cancelbutton_contentdescription">Cancel button</string>
 
 </resources>

@@ -19,6 +19,7 @@ import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.DeleteNoteService;
+import com.lucianpiros.traveljournal.ui.widget.ConfirmationDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
@@ -34,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNoteServiceListener {
+public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNoteServiceListener, ConfirmationDialog.ConfirmationDialogActionListener {
 
     @BindView(R.id.viewnote_mainlayout)
     CoordinatorLayout mainLayout;
@@ -135,11 +136,10 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     }
 
     private void deleteNote() {
-        progressBarTask = new ProgressBarTask(progressBarHolder, getActivity());
-        progressBarTask.execute();
-
-        DeleteNoteService.getInstance().setDeleteNoteServiceListener(this);
-        DeleteNoteService.getInstance().deleteNote(note);
+        ConfirmationDialog confirmationDialog = new ConfirmationDialog(layoutInflater, getContext());
+        confirmationDialog.setConfirmationDialogActionListener(this);
+        confirmationDialog.initialize(viewGroup, getString(R.string.deletenote_confirmationdialogtitle));
+        confirmationDialog.show();
     }
 
     @OnClick(R.id.note_picture_btn)
@@ -167,6 +167,19 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
                 getActivity().finish();
             }
         });
+    }
+
+    @Override
+    public void onAccept() {
+        progressBarTask = new ProgressBarTask(progressBarHolder, getActivity());
+        progressBarTask.execute();
+
+        DeleteNoteService.getInstance().setDeleteNoteServiceListener(this);
+        DeleteNoteService.getInstance().deleteNote(note);
+    }
+
+    @Override
+    public void onDecline() {
 
     }
 }

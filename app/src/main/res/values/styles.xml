@@ -50,6 +50,16 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="AlertDialogImageButton">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginEnd">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginStart">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginTop">@dimen/alertdialog_button_margin</item>
+        <item name="android:layout_marginBottom">@dimen/alertdialog_button_margin</item>
+        <item name="android:background">@drawable/alertdialogbutton_background</item>
+        <item name="android:tint">@color/colorAccent</item>
+    </style>
+
     <style name="ImageButton">
         <item name="android:tint">@color/colorSecondary</item>
         <item name="android:visibility">gone</item>
