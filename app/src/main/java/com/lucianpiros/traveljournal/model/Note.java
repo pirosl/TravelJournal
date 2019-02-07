@@ -6,6 +6,7 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 public class Note {
+    private String noteKey;
     private String noteTitle;
     private String noteContent;
     private Date noteCreationDate;
@@ -20,6 +21,14 @@ public class Note {
         noteCreationDate = null;
         photoDownloadURL = null;
         movieDownloadURL = null;
+    }
+
+    public String getNoteKey() {
+        return noteKey;
+    }
+
+    public void setNoteKey(String noteKey) {
+        this.noteKey = noteKey;
     }
 
     public String getNoteTitle() {

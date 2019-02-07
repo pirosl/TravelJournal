@@ -87,10 +87,11 @@ public class FirebaseDB {
         }
     }
 
-    public void update(String path, @NotNull Note note) {
+    public void update(String noteKey, @NotNull Note note) {
+        note.setNoteKey(noteKey);
         DatabaseReference notesRef = databaseReference.child("notes");
         Map<String, Object> noteUpdate = new HashMap<>();
-        noteUpdate.put(path, note);
+        noteUpdate.put(noteKey, note);
 
         notesRef.updateChildren(noteUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
