@@ -18,8 +18,8 @@ import butterknife.OnClick;
 
 public class CustomAlertDialog {
     public interface CustomDialogActionListener {
-        public void onOption1(int dialogType);
-        public void onOption2(int dialogType);
+        void onOption1(int dialogType);
+        void onOption2(int dialogType);
     }
 
     class Title {
