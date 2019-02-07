@@ -48,9 +48,6 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     private static final int PICK_PHOTO = 1;
     private static final int PICK_VIDEO = 2;
     private static final int TAKE_PHOTO = 3;
-    private static final int RECORD_VIDEO = 4;
-
-
 
     @BindView(R.id.addnote_mainlayout)
     CoordinatorLayout mainLayout;

@@ -30,4 +30,6 @@
 
     <string name="photodoalog_defaulttitle">Photo</string>
 
+    <string name="noteactivity_extra_param" translatable="false">note_key_param</string>
+
 </resources>

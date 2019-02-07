@@ -40,6 +40,7 @@ public class FirebaseDB {
     private OnDBCompleteListener onDBCompleteListener;
 
     private ArrayList<Note> notes;
+    private Map<String, Note> notesMap;
 
     /**
      * Private constructor as this is a singleton
@@ -52,6 +53,7 @@ public class FirebaseDB {
             firebaseDB = new FirebaseDB();
             firebaseDB.databaseReference = FirebaseDatabase.getInstance().getReference();
             firebaseDB.notes = new ArrayList<>();
+            firebaseDB.notesMap = new HashMap<>();
         }
 
         return firebaseDB;
@@ -133,11 +135,21 @@ public class FirebaseDB {
         return notes;
     }
 
+    public Note getNote(String key) {
+        return notesMap.get(key);
+    }
+
+    public Note getNote(int noteIdx) {
+        return notes.get(noteIdx);
+    }
+
     private void fetchData(DataSnapshot dataSnapshot) {
         notes.clear();
+        notesMap.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Note name = ds.getValue(Note.class);
             notes.add(name);
+            notesMap.put(ds.getKey(), name);
         }
     }
 }

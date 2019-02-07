@@ -28,11 +28,17 @@ import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 
-public class JournalNotesListFragment extends Fragment implements FirebaseDB.NoteDBEventsListener {
+public class JournalNotesListFragment extends Fragment implements FirebaseDB.NoteDBEventsListener, NotesAdapter.OnItemSelectedListener {
+
+    public interface OnItemSelectedListener {
+        void onItemSelected(int noteIdx);
+    }
 
     @BindView(R.id.notesrecyclerview) RecyclerView noteRV;
 
     @BindView(R.id.floatingactionbutton) FloatingActionButton fabButton;
+
+    private OnItemSelectedListener onItemSelectedListener;
 
     public JournalNotesListFragment() {
 
@@ -68,7 +74,16 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
 
     @Override
     public void OnNotesListChanged(List<Note> notesList) {
-        NotesAdapter adapter = new NotesAdapter(notesList);
+        NotesAdapter adapter = new NotesAdapter(notesList, this);
         noteRV.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemSelected(int noteIdx) {
+        onItemSelectedListener.onItemSelected(noteIdx);
+    }
+
+    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
+        this.onItemSelectedListener = onItemSelectedListener;
     }
 }

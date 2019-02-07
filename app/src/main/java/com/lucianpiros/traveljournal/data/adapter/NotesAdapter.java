@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,11 +22,15 @@ import butterknife.ButterKnife;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
+    public interface OnItemSelectedListener {
+        void onItemSelected(int position);
+    }
+
     // Recipies list
     private List<Note> notesList;
 
     // OnItemSelectedListene
-    //private AdapterView.OnItemSelectedListener onItemSelectedListener;
+    private OnItemSelectedListener onItemSelectedListener;
 
     /**
      * ViewHolder implementation
@@ -34,16 +39,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         @BindView(R.id.notetitle) TextView noteTitleTV;
         @BindView(R.id.notecontent) TextView noteContentTV;
         @BindView(R.id.noteimage) ImageView noteImageIV;
+        @BindView(R.id.note_rootlayout) FrameLayout layout;
 
         public ViewHolder(View view) {
             super(view);
 
             ButterKnife.bind(this, view);
+
+            layout.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-        //    onItemSelectedListener.onItemSelected(getAdapterPosition()); // call the onClick in the OnItemSelectedListener
+            onItemSelectedListener.onItemSelected(getAdapterPosition());
         }
     }
 
@@ -52,9 +60,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
      *
      * @param notesList
      */
-    public NotesAdapter(List<Note> notesList)/*, OnItemSelectedListener onItemSelectedListener)*/ {
+    public NotesAdapter(List<Note> notesList, OnItemSelectedListener onItemSelectedListener) {
         this.notesList = notesList;
-        //this.onItemSelectedListener = onItemSelectedListener;
+        this.onItemSelectedListener = onItemSelectedListener;
     }
 
     @Override
