@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/addnote_mainlayout"
+    android:id="@+id/viewnote_mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -43,6 +42,7 @@
                         android:layout_width="@dimen/imagebutton_width"
                         android:layout_height="wrap_content"
                         style="@style/ImageButton"
+                        android:contentDescription="@string/note_picture_contentdescription"
                         android:src="@drawable/ic_has_photo"/>
                     <ImageButton
                         android:id="@+id/note_movie_btn"
@@ -50,6 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/imagebutton_horizontal_margin"
                         style="@style/ImageButton"
+                        android:contentDescription="@string/note_movie_contentdescription"
                         android:src="@drawable/ic_has_movie"/>
                 </LinearLayout>
 
@@ -67,4 +68,6 @@
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
+    <include layout="@layout/progressbar"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
