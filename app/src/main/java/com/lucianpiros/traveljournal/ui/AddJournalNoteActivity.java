@@ -225,8 +225,8 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     @OnClick(R.id.note_movie_btn)
     protected void showMovie() {
         MovieAlertDialog movieDialog = new MovieAlertDialog(this.getLayoutInflater(), this);
-        movieDialog.initialize(viewGroup, AddNoteService.getInstance().getSelectedVideoUri());
-        movieDialog.showLocal();
+        movieDialog.initialize(viewGroup);
+        movieDialog.showLocal(AddNoteService.getInstance().getSelectedVideoUri());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.lucianpiros.traveljournal.data;
 
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Continuation;
@@ -8,10 +9,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -32,6 +35,10 @@ public class FirebaseCS {
         void onFileDelete(int fileType, boolean success);
     }
 
+    public interface FileDownloadListener {
+        void onComplete(boolean success);
+    }
+
     private static final String FIREBASE_STORAGE_BUCKET = "gs://traveljournal-bedf8.appspot.com";
 
     private static FirebaseCS firebaseCS = null;
@@ -40,6 +47,7 @@ public class FirebaseCS {
 
     private FileUploaderListener fileUploaderListener;
     private FileDeleteListener fileDeleteListener;
+    private FileDownloadListener fileDownloadListener;
 
 
     /**
@@ -64,6 +72,10 @@ public class FirebaseCS {
 
     public void setFileDeleteListener(FileDeleteListener fileDeleteListener) {
         this.fileDeleteListener = fileDeleteListener;
+    }
+
+    public void setFileDownloadListener(FileDownloadListener fileDownloadListener) {
+        this.fileDownloadListener = fileDownloadListener;
     }
 
     public void uploadPhoto(String child, String fileName, InputStream photoStream) {
@@ -143,6 +155,27 @@ public class FirebaseCS {
             public void onFailure(@NonNull Exception exception) {
                 Log.d(TAG, exception.getMessage());
                 fileDeleteListener.onFileDelete(fileType, false);
+            }
+        });
+    }
+
+    public void dowloadFile(String child, String remoteFile, String localFile) {
+        StorageReference storageRef = firebaseStorage.getReferenceFromUrl(FIREBASE_STORAGE_BUCKET);
+        StorageReference fileRef = storageRef.child(child).child(remoteFile);
+
+        final File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),localFile);
+
+        fileRef.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Log.e(TAG,";local tem file created  created " +localFile.toString());
+                fileDownloadListener.onComplete(true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.e(TAG,";local tem file not created  created " +exception.toString());
+                fileDownloadListener.onComplete(true);
             }
         });
     }

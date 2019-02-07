@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,27 +14,44 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.DefaultHlsExtractorFactory;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.Allocator;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.util.Util;
 import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.data.FirebaseCS;
 import com.lucianpiros.traveljournal.service.GlideApp;
+
+import java.io.File;
 
 import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MovieAlertDialog {
+public class MovieAlertDialog implements FirebaseCS.FileDownloadListener {
+    private static final String TMP_LOCALFILE = "tmp_movie.mp4";
+
     class Body {
         @BindView(R.id.alertdialog_player)
         PlayerView playerView;
@@ -50,7 +68,6 @@ public class MovieAlertDialog {
     private LayoutInflater layoutInflater;
     private Context context;
     private Dialog alertDialog;
-    private Uri movieUri;
     private Body dialogBody;
 
     public MovieAlertDialog(LayoutInflater layoutInflater, Context context) {
@@ -58,10 +75,8 @@ public class MovieAlertDialog {
         this.context = context;
     }
 
-    public void initialize(@NotNull ViewGroup viewGroup, Uri moviewUri) {
+    public void initialize(@NotNull ViewGroup viewGroup) {
         dialogBody = new Body();
-
-        this.movieUri = moviewUri;
 
         View bodyView = layoutInflater.inflate(R.layout.alertdialog_moviebody, viewGroup, false);
         ButterKnife.bind(dialogBody, bodyView);
@@ -73,12 +88,12 @@ public class MovieAlertDialog {
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    public void showLocal() {
-        initializePlayer(movieUri);
+    public void showLocal(Uri movieUri) {
+        initializePlayerWithLocalSource(movieUri);
         alertDialog.show();
     }
 
-    private void initializePlayer(Uri uri) {
+    private void initializePlayerWithLocalSource(Uri uri) {
         MediaSource mediaSource = new ExtractorMediaSource(uri,
                 new DefaultDataSourceFactory(context,"ua"),
                 new DefaultExtractorsFactory(), null, null);
@@ -90,5 +105,19 @@ public class MovieAlertDialog {
         player.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
 
         dialogBody.playerView.setPlayer(player);
+    }
+
+    public void showRemote(String noteKey, String movieName) {
+        FirebaseCS.getInstance().setFileDownloadListener(this);
+        FirebaseCS.getInstance().dowloadFile(noteKey, movieName, TMP_LOCALFILE);
+        alertDialog.show();
+    }
+
+    @Override
+    public void onComplete(boolean success) {
+        if(success) {
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), TMP_LOCALFILE);
+            initializePlayerWithLocalSource(Uri.parse(file.getPath()));
+        }
     }
 }

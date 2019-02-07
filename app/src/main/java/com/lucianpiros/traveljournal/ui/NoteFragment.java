@@ -3,7 +3,6 @@ package com.lucianpiros.traveljournal.ui;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +19,7 @@ import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.DeleteNoteService;
 import com.lucianpiros.traveljournal.ui.widget.ConfirmationDialog;
+import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
@@ -147,6 +147,13 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         PhotoAlertDialog photoDialog = new PhotoAlertDialog(layoutInflater, this.getContext());
         photoDialog.initialize(viewGroup);
         photoDialog.showRemote(note.getPhotoDownloadURL());
+    }
+
+    @OnClick(R.id.note_movie_btn)
+    protected void showMovie() {
+        MovieAlertDialog movieDialog = new MovieAlertDialog(layoutInflater, this.getContext());
+        movieDialog.initialize(viewGroup);
+        movieDialog.showRemote(note.getNoteKey(), note.getMovieFileName());
     }
 
     @Override

@@ -25,5 +25,5 @@
 
     <dimen name="alert_imageview_padding">4dp</dimen>
 
-    <dimen name="exoplayer_button_size">100dp</dimen>
+    <dimen name="exoplayer_button_size">48dp</dimen>
 </resources>
