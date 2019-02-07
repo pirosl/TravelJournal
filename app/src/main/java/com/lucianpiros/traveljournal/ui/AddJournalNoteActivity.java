@@ -220,8 +220,8 @@ public class AddJournalNoteActivity extends AppCompatActivity implements AddNote
     @OnClick(R.id.note_picture_btn)
     protected void showImage() {
         PhotoAlertDialog photoDialog = new PhotoAlertDialog(this.getLayoutInflater(), this);
-        photoDialog.initialize(viewGroup, AddNoteService.getInstance().getSelectedPhotoUri());
-        photoDialog.showLocal();
+        photoDialog.initialize(viewGroup);
+        photoDialog.showLocal(AddNoteService.getInstance().getSelectedPhotoUri());
     }
 
     @OnClick(R.id.note_movie_btn)

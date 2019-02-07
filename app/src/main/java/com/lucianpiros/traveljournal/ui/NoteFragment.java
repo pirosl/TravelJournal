@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
+import com.lucianpiros.traveljournal.service.AddNoteService;
+import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 
 import java.text.SimpleDateFormat;
 
@@ -17,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class NoteFragment extends Fragment {
 
@@ -30,6 +33,11 @@ public class NoteFragment extends Fragment {
     ImageButton noteMovieBT;
     @BindView(R.id.note_content)
     TextView noteContentTV;
+  //  @BindView(android.R.id.content)
+    private ViewGroup viewGroup;
+
+    private LayoutInflater layoutInflater;
+    private Note note;
 
     public NoteFragment() {
     }
@@ -38,6 +46,9 @@ public class NoteFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        this.layoutInflater = inflater;
+        this.viewGroup = container;
 
         View noteView = inflater.inflate(R.layout.fragment_note, container, false);
 
@@ -51,7 +62,7 @@ public class NoteFragment extends Fragment {
             noteIdx = bundle.getInt(getResources()
                     .getString(R.string.noteactivity_extra_param));
 
-        Note note = FirebaseDB.getInstance().getNote(noteIdx);
+        note = FirebaseDB.getInstance().getNote(noteIdx);
 
         noteTitleTV.setText(note.getNoteTitle());
         noteContentTV.setText(note.getNoteContent());
@@ -70,5 +81,12 @@ public class NoteFragment extends Fragment {
         }
 
         return noteView;
+    }
+
+    @OnClick(R.id.note_picture_btn)
+    protected void showImage() {
+        PhotoAlertDialog photoDialog = new PhotoAlertDialog(layoutInflater, this.getContext());
+        photoDialog.initialize(viewGroup);
+        photoDialog.showRemote(note.getPhotoDownloadURL());
     }
 }

@@ -40,7 +40,6 @@ public class PhotoAlertDialog {
     private LayoutInflater layoutInflater;
     private Context context;
     private Dialog alertDialog;
-    private Uri photoURL;
     private Body dialogBody;
 
     public PhotoAlertDialog(LayoutInflater layoutInflater, Context context) {
@@ -48,10 +47,8 @@ public class PhotoAlertDialog {
         this.context = context;
     }
 
-    public void initialize(@NotNull ViewGroup viewGroup, Uri photoURL) {
+    public void initialize(@NotNull ViewGroup viewGroup) {
         dialogBody = new Body();
-
-        this.photoURL = photoURL;
 
         View bodyView = layoutInflater.inflate(R.layout.alertdialog_imagebody, viewGroup, false);
         ButterKnife.bind(dialogBody, bodyView);
@@ -63,8 +60,14 @@ public class PhotoAlertDialog {
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    public void showLocal() {
+    public void showLocal( Uri photoURI) {
+        dialogBody.imageView.setImageURI(photoURI);
         alertDialog.show();
-        dialogBody.imageView.setImageURI(photoURL);
     }
+
+    public void showRemote(String photoURL) {
+        GlideApp.with(context).load(photoURL).into(dialogBody.imageView);
+        alertDialog.show();
+    }
+
 }
