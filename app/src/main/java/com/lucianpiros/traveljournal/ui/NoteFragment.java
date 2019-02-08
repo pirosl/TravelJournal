@@ -1,5 +1,6 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -127,6 +128,9 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.action_edit:
+                editNote();
+                return true;
             case R.id.action_delete:
                 deleteNote();
                 return true;
@@ -140,6 +144,12 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         confirmationDialog.setConfirmationDialogActionListener(this);
         confirmationDialog.initialize(viewGroup, getString(R.string.deletenote_confirmationdialogtitle));
         confirmationDialog.show();
+    }
+
+    private void editNote() {
+        Intent intent = new Intent(this.getContext(), EditJournalNoteActivity.class);
+        intent.putExtra(getResources().getString(R.string.noteactivity_extra_param), note.getNoteKey());
+        startActivity(intent);
     }
 
     @OnClick(R.id.note_picture_btn)
