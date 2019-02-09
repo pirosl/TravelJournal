@@ -4,6 +4,16 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Date;
 
+/**
+ * Note bean class. Represent a journal note.
+ * Stores note title, content, creation data, geotag information.
+ * Also stores information about linked photo and movie files and
+ * key created on Firebase Realtime Database. This information is stored
+ * to easily update note on Firebase
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 @IgnoreExtraProperties
 public class Note {
     private String noteKey;
