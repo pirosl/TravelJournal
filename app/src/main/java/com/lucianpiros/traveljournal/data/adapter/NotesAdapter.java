@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.GlideApp;
@@ -83,7 +85,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         String recipePhotoURL = recipe.getPhotoDownloadURL();
         if(recipePhotoURL != null) {
             Log.d("Test", "image at " + position);
-            GlideApp.with(holder.itemView.getContext()).load(recipePhotoURL).into(holder.noteImageIV);
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_errorloaging_image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            GlideApp.with(holder.itemView.getContext()).load(recipePhotoURL).apply(options).into(holder.noteImageIV);
         }
     }
 

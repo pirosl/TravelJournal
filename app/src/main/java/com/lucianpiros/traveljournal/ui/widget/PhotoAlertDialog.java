@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.GlideApp;
@@ -66,7 +68,12 @@ public class PhotoAlertDialog {
     }
 
     public void showRemote(String photoURL) {
-        GlideApp.with(context).load(photoURL).into(dialogBody.imageView);
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_image_placeholder)
+                .error(R.drawable.ic_errorloaging_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        GlideApp.with(context).load(photoURL).apply(options).into(dialogBody.imageView);
         alertDialog.show();
     }
 
