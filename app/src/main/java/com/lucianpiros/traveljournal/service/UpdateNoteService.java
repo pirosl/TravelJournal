@@ -12,17 +12,37 @@ import com.lucianpiros.traveljournal.model.Note;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Date;
 
-public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, FirebaseCS.FileUploaderListener  {
+/**
+ * Update note service implementation.
+ * Handles all the logic of updating a note.
+ * When a note is updated, few steps have to be performed:
+ * - if note has a photo or movie attached, upload them on Firebase Cloud Storage
+ * using the key from Firebase Database as refference
+ * - update note with downloadable URL provided by Firebase Cloud Storage
+ * <p>
+ * This class is a singleton class.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
+public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, FirebaseCS.FileUploaderListener {
     private final static String TAG = UpdateNoteService.class.getSimpleName();
 
+    /**
+     * Method of this interface are called when update operation is complete.
+     *
+     * @author Lucian Piros
+     * @version 1.0
+     */
     public interface UpdateNoteServiceListener {
         void onComplete();
     }
 
+    // Static refference to UpdateNoteService instance
     private static UpdateNoteService updateNoteService = null;
 
+    // Global Note used through all update steps
     private Note note;
     private Uri selectedPhotoUri;
     private Uri selectedVideoUri;
@@ -32,12 +52,21 @@ public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
 
     private UpdateNoteServiceListener updateNoteServiceListener;
 
+    /**
+     * Private class constructor
+     */
     private UpdateNoteService() {
 
     }
 
+    /**
+     * Return class singleton instance.
+     * Register this class as FirebaseCS and FirebaseDB listeners.
+     *
+     * @return singleton instance
+     */
     public static UpdateNoteService getInstance() {
-        if(updateNoteService == null) {
+        if (updateNoteService == null) {
             updateNoteService = new UpdateNoteService();
         }
 
@@ -70,11 +99,16 @@ public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
         this.updateNoteServiceListener = updateNoteServiceListener;
     }
 
+    /**
+     * Update method. Updates Note provided as parameter.
+     *
+     * @param note note to be updated.
+     */
     public void updateNote(@NotNull Note note) {
         this.note = note;
 
         updatesPerformed = 0;
-        if(selectedPhotoUri != null) {
+        if (selectedPhotoUri != null) {
             String name = getName(selectedPhotoUri);
 
             try {
@@ -87,17 +121,15 @@ public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
             } catch (FileNotFoundException e) {
                 Log.d(TAG, e.getMessage());
             }
-        }
-        else {
-            if(selectedVideoUri != null) {
+        } else {
+            if (selectedVideoUri != null) {
                 synchronized (this) {
                     updatesPerformed++;
                 }
                 String name = getName(selectedVideoUri);
                 note.setMovieFileName(name);
                 FirebaseCS.getInstance().uploadMovie(note.getNoteKey(), name, selectedVideoUri);
-            }
-            else {
+            } else {
                 synchronized (this) {
                     updatesPerformed++;
                 }
@@ -112,9 +144,13 @@ public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
     }
 
     private String getName(Uri uri) {
-        File file= new File(uri.getPath());
-        String name = file.getName();
-        return name;
+        String path = uri.getPath();
+        if (path != null) {
+            File file = new File(uri.getPath());
+            return file.getName();
+        }
+
+        return null;
     }
 
     @Override
@@ -122,7 +158,7 @@ public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
         synchronized (this) {
             updatesPerformed--;
         }
-        if(updatesPerformed == 0)
+        if (updatesPerformed == 0)
             complete();
     }
 
@@ -136,15 +172,14 @@ public class UpdateNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
         note.setPhotoDownloadURL(downloadUri);
         FirebaseDB.getInstance().update(note.getNoteKey(), note);
 
-        if(selectedVideoUri != null) {
+        if (selectedVideoUri != null) {
             synchronized (this) {
                 updatesPerformed++;
             }
             String name = getName(selectedVideoUri);
             note.setMovieFileName(name);
             FirebaseCS.getInstance().uploadMovie(note.getNoteKey(), name, selectedVideoUri);
-        }
-        else {
+        } else {
             complete();
         }
     }
