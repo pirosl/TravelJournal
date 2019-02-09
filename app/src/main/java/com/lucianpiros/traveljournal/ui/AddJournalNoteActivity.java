@@ -1,7 +1,10 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
@@ -14,7 +17,7 @@ import java.util.Random;
 
 import androidx.core.os.ConfigurationCompat;
 
-public class AddJournalNoteActivity extends EditableJournalNoteActivity {
+public class AddJournalNoteActivity extends EditableJournalNoteActivity implements AddNoteService.AddNoteServiceListener {
 
     private static final String TAG = AddJournalNoteActivity.class.getSimpleName();
 
@@ -38,6 +41,8 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity {
                     "Consul aliquam mea id, nullam primis vim ut. Eu sea dico iisque assueverit. Vim et meis errem eleifend. Ex reque verterem nam, in novum zril solet eum. An mei odio disputando, eos sanctus vocibus euripidis cu, nominavi philosophia mei no. Ex corpora antiopam oportere pri, an has paulo viderer.");
             // end testing
         }
+
+        AddNoteService.getInstance().setAddNoteServiceListener(this);
     }
 
     @Override
@@ -66,6 +71,27 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity {
             Snackbar snackbar = Snackbar
                     .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);
             snackbar.show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        annimateAddFAB();
+
+        if ((requestCode == PICK_PHOTO || requestCode == TAKE_PHOTO)
+                && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedPhotoUri = data.getData();
+            AddNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
+            notePictureBT.setVisibility(View.VISIBLE);
+        }
+        if (requestCode == PICK_VIDEO && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedVideoUri = data.getData();
+            AddNoteService.getInstance().setSelectedVideoUri(selectedVideoUri);
+            noteMovieBT.setVisibility(View.VISIBLE);
         }
     }
 

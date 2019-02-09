@@ -38,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public abstract class EditableJournalNoteActivity extends AppCompatActivity implements AddNoteService.AddNoteServiceListener, CustomAlertDialog.CustomDialogActionListener {
+public abstract class EditableJournalNoteActivity extends AppCompatActivity implements CustomAlertDialog.CustomDialogActionListener {
 
     private static final String TAG = EditableJournalNoteActivity.class.getSimpleName();
 
@@ -96,8 +96,6 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
             notePictureBT.setVisibility(savedInstanceState.getInt(getString(R.string.addnotestate_picture)));
             noteMovieBT.setVisibility(savedInstanceState.getInt(getString(R.string.addnotestate_movie)));
         }
-
-        AddNoteService.getInstance().setAddNoteServiceListener(this);
     }
 
     @Override
@@ -183,27 +181,6 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         MovieAlertDialog movieDialog = new MovieAlertDialog(this.getLayoutInflater(), this);
         movieDialog.initialize(viewGroup);
         movieDialog.showLocal(AddNoteService.getInstance().getSelectedVideoUri());
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        annimateAddFAB();
-
-        if ((requestCode == PICK_PHOTO || requestCode == TAKE_PHOTO)
-                && resultCode == RESULT_OK
-                && null != data) {
-            Uri selectedPhotoUri = data.getData();
-            AddNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
-            notePictureBT.setVisibility(View.VISIBLE);
-        }
-        if (requestCode == PICK_VIDEO && resultCode == RESULT_OK
-                && null != data) {
-            Uri selectedVideoUri = data.getData();
-            AddNoteService.getInstance().setSelectedVideoUri(selectedVideoUri);
-            noteMovieBT.setVisibility(View.VISIBLE);
-        }
     }
 
     public void onOption1(int dialogType) {

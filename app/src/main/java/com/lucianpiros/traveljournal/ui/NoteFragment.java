@@ -55,6 +55,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     private LayoutInflater layoutInflater;
     private Note note;
     private ProgressBarTask progressBarTask;
+    private int noteIdx;
 
     public NoteFragment() {
     }
@@ -80,10 +81,17 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         // Retrieve recipe idx passed as parameter from Main Activity
         Bundle bundle = getArguments();
 
-        int noteIdx = -1;
+        noteIdx = -1;
         if(bundle != null)
             noteIdx = bundle.getInt(getResources()
                     .getString(R.string.noteactivity_extra_param));
+
+        return noteView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         note = FirebaseDB.getInstance().getNote(noteIdx);
 
@@ -102,10 +110,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         if(moviewURL != null && moviewURL.length() > 0) {
             noteMovieBT.setVisibility(View.VISIBLE);
         }
-
-        return noteView;
     }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.

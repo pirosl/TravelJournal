@@ -1,6 +1,7 @@
 package com.lucianpiros.traveljournal.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,9 @@ import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.AddNoteService;
+import com.lucianpiros.traveljournal.service.UpdateNoteService;
+import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
+import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import java.text.SimpleDateFormat;
@@ -17,8 +21,9 @@ import java.util.Date;
 import java.util.Random;
 
 import androidx.core.os.ConfigurationCompat;
+import butterknife.OnClick;
 
-public class EditJournalNoteActivity extends EditableJournalNoteActivity {
+public class EditJournalNoteActivity extends EditableJournalNoteActivity implements UpdateNoteService.UpdateNoteServiceListener {
 
     private static final String TAG = EditJournalNoteActivity.class.getSimpleName();
 
@@ -50,8 +55,9 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity {
             if(moviewURL != null && moviewURL.length() > 0) {
                 noteMovieBT.setVisibility(View.VISIBLE);
             }
-
         }
+
+        UpdateNoteService.getInstance().setUpdateNoteServiceListener(this);
     }
 
     @Override
@@ -71,11 +77,11 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity {
             progressBarTask = new ProgressBarTask(progressBarHolder, this);
             progressBarTask.execute();
 
-            //AddNoteService.getInstance().setContentResolver(getContentResolver());
-            //AddNoteService.getInstance().setNoteTitle(noteTitleET.getText().toString());
-            //AddNoteService.getInstance().setNoteContent(noteContentET.getText().toString());
+            UpdateNoteService.getInstance().setContentResolver(getContentResolver());
+            note.setNoteTitle(noteTitleET.getText().toString());
+            note.setNoteContent(noteContentET.getText().toString());
 
-//            AddNoteService.getInstance().addNote();
+            UpdateNoteService.getInstance().updateNote(note);
         } else {
             Snackbar snackbar = Snackbar
                     .make(mainLayout, getResources().getString(R.string.notetitleorcontent_empty), Snackbar.LENGTH_SHORT);
@@ -101,5 +107,52 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        annimateAddFAB();
+
+        if ((requestCode == PICK_PHOTO || requestCode == TAKE_PHOTO)
+                && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedPhotoUri = data.getData();
+            UpdateNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
+            notePictureBT.setVisibility(View.VISIBLE);
+        }
+        if (requestCode == PICK_VIDEO && resultCode == RESULT_OK
+                && null != data) {
+            Uri selectedVideoUri = data.getData();
+            UpdateNoteService.getInstance().setSelectedVideoUri(selectedVideoUri);
+            noteMovieBT.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @OnClick(R.id.note_picture_btn)
+    protected void showImage() {
+        PhotoAlertDialog photoDialog = new PhotoAlertDialog(this.getLayoutInflater(), this);
+        photoDialog.initialize(viewGroup);
+
+        if(UpdateNoteService.getInstance().getSelectedPhotoUri() != null) {
+            photoDialog.showLocal(UpdateNoteService.getInstance().getSelectedPhotoUri());
+        }
+        else {
+            photoDialog.showRemote(note.getPhotoDownloadURL());
+        }
+    }
+
+    @OnClick(R.id.note_movie_btn)
+    protected void showMovie() {
+        MovieAlertDialog movieDialog = new MovieAlertDialog(this.getLayoutInflater(), this);
+        movieDialog.initialize(viewGroup);
+
+        if(UpdateNoteService.getInstance().getSelectedVideoUri() != null) {
+            movieDialog.showLocal(UpdateNoteService.getInstance().getSelectedVideoUri());
+        }
+        else {
+            movieDialog.showRemote(note.getNoteKey(), note.getMovieDownloadURL());
+        }
     }
 }
