@@ -52,7 +52,7 @@ public class DeleteNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
      * @return singleton instance
      */
     public static DeleteNoteService getInstance() {
-        if(deleteNoteService == null) {
+        if (deleteNoteService == null) {
             deleteNoteService = new DeleteNoteService();
         }
 
@@ -75,15 +75,13 @@ public class DeleteNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
         this.note = note;
 
         String photoDownloadURL = note.getPhotoDownloadURL();
-        if(photoDownloadURL != null && photoDownloadURL.length() > 0) {
+        if (photoDownloadURL != null && photoDownloadURL.length() > 0) {
             FirebaseCS.getInstance().deleteFile(note.getNoteKey(), note.getPhotoFileName(), FirebaseCS.FileDeleteListener.PHOTO);
-        }
-        else {
+        } else {
             String movieDownloadURL = note.getMovieDownloadURL();
-            if(movieDownloadURL != null && movieDownloadURL.length() > 0) {
+            if (movieDownloadURL != null && movieDownloadURL.length() > 0) {
                 FirebaseCS.getInstance().deleteFile(note.getNoteKey(), note.getMovieFileName(), FirebaseCS.FileDeleteListener.MOVIE);
-            }
-            else {
+            } else {
                 FirebaseDB.getInstance().deleteNote(note);
             }
         }
@@ -91,16 +89,15 @@ public class DeleteNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
 
     @Override
     public void onFileDelete(int fileType, boolean success) {
-        if(fileType == FirebaseCS.FileDeleteListener.PHOTO) {
+        if (fileType == FirebaseCS.FileDeleteListener.PHOTO) {
             String movieDownloadURL = note.getMovieDownloadURL();
-            if(movieDownloadURL != null && movieDownloadURL.length() > 0) {
+            if (movieDownloadURL != null && movieDownloadURL.length() > 0) {
                 FirebaseCS.getInstance().deleteFile(note.getNoteKey(), note.getMovieFileName(), FirebaseCS.FileDeleteListener.MOVIE);
-            }
-            else {
+            } else {
                 FirebaseDB.getInstance().deleteNote(note);
             }
         }
-        if(fileType == FirebaseCS.FileDeleteListener.MOVIE) {
+        if (fileType == FirebaseCS.FileDeleteListener.MOVIE) {
             FirebaseDB.getInstance().deleteNote(note);
         }
     }
