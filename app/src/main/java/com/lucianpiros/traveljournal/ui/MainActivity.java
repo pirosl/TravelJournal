@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -17,6 +18,8 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     @BindView(R.id.mainactivity_tabs)
     TabLayout tabLayout;
+
+    final private static int[] tabIconRids = {R.drawable.ic_notes, R.drawable.ic_adventures, R.drawable.ic_map, R.drawable.ic_calendar};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+
+        ColorStateList colors;
+        if (Build.VERSION.SDK_INT >= 23) {
+            colors = getResources().getColorStateList(R.color.tab_tint_color, getTheme());
+        }
+        else {
+            colors = getResources().getColorStateList(R.color.tab_tint_color);
+        }
+
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setIcon(tabIconRids[i]);
+            Drawable icon = tab.getIcon();
+
+            if (icon != null) {
+                icon = DrawableCompat.wrap(icon);
+                DrawableCompat.setTintList(icon, colors);
+            }
+        }
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         LocationService.getInstance().setActivity(this);
@@ -106,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
-            switch (position) {
+            /*switch (position) {
                 case 0:
                     return mContext.getString(R.string.tab_notes);
                 case 1:
@@ -117,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
                     return mContext.getString(R.string.tab_calendar);
                 default:
                     return null;
-            }
+            }*/
+            return null;
         }
     }
 }
