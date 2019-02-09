@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.data.FirebaseCS;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
@@ -13,13 +14,34 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
 
-public class AddNoteService implements FirebaseDB.OnDBCompleteListener, FirebaseCS.FileUploaderListener  {
+/**
+ * Add note service implementation.
+ * Handles all the logic of adding a note.
+ * When a note is added, few steps have to be performed:
+ * - add note to Firebase Realtime Database
+ * - if note has a photo or movie attached, upload them on Firebase Cloud Storage
+ * using the key from Firebase Database as refference
+ * - update note with downloadable URL provided by Firebase Cloud Storage
+ * <p>
+ * This class is a singleton class.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
+public class AddNoteService implements FirebaseDB.OnDBCompleteListener, FirebaseCS.FileUploaderListener {
     private final static String TAG = AddNoteService.class.getSimpleName();
 
+    /**
+     * Method of this interface are called when add operation is complete.
+     *
+     * @author Lucian Piros
+     * @version 1.0
+     */
     public interface AddNoteServiceListener {
         void onComplete();
     }
 
+    // Static refference to AddNoteService
     private static AddNoteService addNoteService = null;
 
     private String noteTitle;
@@ -31,17 +53,28 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
 
     private String noteKey;
 
+    // Note object stored across FirebaseCS and FirebaseBD operations
     private Note note;
+
     private int updatesPerformed;
 
     private AddNoteServiceListener addNoteServiceListener;
 
+    /**
+     * Private class constructor
+     */
     private AddNoteService() {
 
     }
 
+    /**
+     * Static method returning singleton instance.
+     *
+     * @return singleton instance
+     */
     public static AddNoteService getInstance() {
-        if(addNoteService == null) {
+        if (addNoteService == null) {
+
             addNoteService = new AddNoteService();
         }
 
@@ -86,6 +119,9 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
         this.addNoteServiceListener = addNoteServiceListener;
     }
 
+    /**
+     * Add note method. Called to add a note to Firebase
+     */
     public void addNote() {
         note = new Note();
         note.setNoteTitle(noteTitle);
@@ -101,7 +137,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
     @Override
     public void onInsertComplete(boolean success, String noteKey) {
         updatesPerformed = 0;
-        if(selectedPhotoUri != null) {
+        if (selectedPhotoUri != null) {
             this.noteKey = noteKey;
             String name = getName(selectedPhotoUri);
 
@@ -115,9 +151,8 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
             } catch (FileNotFoundException e) {
                 Log.d(TAG, e.getMessage());
             }
-        }
-        else {
-            if(selectedVideoUri != null) {
+        } else {
+            if (selectedVideoUri != null) {
                 synchronized (this) {
                     updatesPerformed++;
                 }
@@ -125,8 +160,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
                 String name = getName(selectedVideoUri);
                 note.setMovieFileName(name);
                 FirebaseCS.getInstance().uploadMovie(noteKey, name, selectedVideoUri);
-            }
-            else {
+            } else {
                 synchronized (this) {
                     updatesPerformed++;
                 }
@@ -136,10 +170,14 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
         }
     }
 
-    private String getName(Uri uri) {
-        File file= new File(uri.getPath());
-        String name = file.getName();
-        return name;
+    private String getName(@NotNull Uri uri) {
+        String path = uri.getPath();
+        if(path != null) {
+            File file = new File(uri.getPath());
+            return file.getName();
+        }
+
+        return null;
     }
 
     @Override
@@ -147,7 +185,7 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
         synchronized (this) {
             updatesPerformed--;
         }
-        if(updatesPerformed == 0)
+        if (updatesPerformed == 0)
             complete();
     }
 
@@ -161,15 +199,14 @@ public class AddNoteService implements FirebaseDB.OnDBCompleteListener, Firebase
         note.setPhotoDownloadURL(downloadUri);
         FirebaseDB.getInstance().update(noteKey, note);
 
-        if(selectedVideoUri != null) {
+        if (selectedVideoUri != null) {
             synchronized (this) {
                 updatesPerformed++;
             }
             String name = getName(selectedVideoUri);
             note.setMovieFileName(name);
             FirebaseCS.getInstance().uploadMovie(noteKey, name, selectedVideoUri);
-        }
-        else {
+        } else {
             complete();
         }
     }
