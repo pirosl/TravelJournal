@@ -3,6 +3,7 @@
 
     <string name="note_title">Enter title</string>
 
+    <string name="addnote_title">Add note</string>
     <string name="addnote_success">Note added</string>
     <string name="addnote_error">Error adding note</string>
     <string name="notetitleorcontent_empty">Note title or note content null. Note can\'t be saved</string>

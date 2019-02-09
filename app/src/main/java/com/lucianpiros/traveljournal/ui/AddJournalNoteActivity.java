@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.ConfigurationCompat;
 
 public class AddJournalNoteActivity extends EditableJournalNoteActivity implements AddNoteService.AddNoteServiceListener {
@@ -34,6 +35,7 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
             SimpleDateFormat dateSF = new SimpleDateFormat(getString(R.string.note_dateformat), ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0));
             noteDateTV.setText(dateSF.format(noteCreationDate));
 
+            getSupportActionBar().setTitle(getString(R.string.addnote_title));
             // testing purpose
             noteTitleET.setText("Title " + new Random().nextInt(1000));
             noteContentET.setText("Lorem ipsum dolor sit amet, quo nisl ubique ut. Latine delectus comprehensam ex vis. Id per noluisse reformidans, labore eripuit eleifend ut per. Vel cu sint quodsi alterum. Habeo euismod ad duo.\n" +
