@@ -18,12 +18,27 @@ import com.lucianpiros.traveljournal.service.GlideApp;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * RecyclerView.Adapter implementation for journal notes recycler view.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
+    private final static String TAG = NotesAdapter.class.getSimpleName();
+
+    /**
+     * Method of this interface are called when item is selected / tapped on.
+     *
+     * @author Lucian Piros
+     * @version 1.0
+     */
     public interface OnItemSelectedListener {
         void onItemSelected(int position);
     }
@@ -36,6 +51,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     /**
      * ViewHolder implementation
+     *
+     * @author Lucian Piros
+     * @version 1.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.notetitle) TextView noteTitleTV;
@@ -60,15 +78,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     /**
      * Class constructor
      *
-     * @param notesList
+     * @param notesList notes list managed by this adapte
+     * @param onItemSelectedListener selected item listener
      */
     public NotesAdapter(List<Note> notesList, OnItemSelectedListener onItemSelectedListener) {
         this.notesList = notesList;
         this.onItemSelectedListener = onItemSelectedListener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.journalnoterow, parent, false);
 
@@ -76,7 +96,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Note recipe = notesList.get(position);
         // Populate the data into the template view using the data object
         holder.noteTitleTV.setText(recipe.getNoteTitle());
@@ -84,7 +104,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         String recipePhotoURL = recipe.getPhotoDownloadURL();
         if(recipePhotoURL != null) {
-            Log.d("Test", "image at " + position);
+            Log.d(TAG, "Loading image at " + recipePhotoURL);
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.drawable.ic_image_placeholder)
