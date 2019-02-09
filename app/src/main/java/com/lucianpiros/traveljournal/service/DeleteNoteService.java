@@ -4,22 +4,53 @@ import com.lucianpiros.traveljournal.data.FirebaseCS;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 
+/**
+ * Delete note service implementation.
+ * Handles all the logic of deleting a note.
+ * When a note is deleted, few steps have to be performed:
+ * - delete note to Firebase Realtime Database
+ * - delete any photo or movie stored on Firebase cloud storage
+ *
+ * <p>
+ * This class is a singleton class.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class DeleteNoteService implements FirebaseDB.OnDBCompleteListener, FirebaseCS.FileDeleteListener {
     private final static String TAG = DeleteNoteService.class.getSimpleName();
 
+    /**
+     * Method of this interface are called when delete operation is complete.
+     *
+     * @author Lucian Piros
+     * @version 1.0
+     */
     public interface DeleteNoteServiceListener {
         void onComplete();
     }
 
     private static DeleteNoteService deleteNoteService = null;
 
+    // note stored across delete operation
     private Note note;
+
+    // DeleteNoteServiceListener instanec
     private DeleteNoteServiceListener deleteNoteServiceListener;
 
+    /**
+     * Private class constructor
+     */
     private DeleteNoteService() {
 
     }
 
+    /**
+     * Static method returning an instance of this class.
+     * Instance is registered as a FirebaseBD and FirebaseCS listener
+     *
+     * @return singleton instance
+     */
     public static DeleteNoteService getInstance() {
         if(deleteNoteService == null) {
             deleteNoteService = new DeleteNoteService();
@@ -35,6 +66,11 @@ public class DeleteNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
         this.deleteNoteServiceListener = deleteNoteServiceListener;
     }
 
+    /**
+     * Delete note method. Called to delete a note from FirebaseBD.
+     *
+     * @param note note to be deleted
+     */
     public void deleteNote(Note note) {
         this.note = note;
 
@@ -51,7 +87,6 @@ public class DeleteNoteService implements FirebaseDB.OnDBCompleteListener, Fireb
                 FirebaseDB.getInstance().deleteNote(note);
             }
         }
-
     }
 
     @Override
