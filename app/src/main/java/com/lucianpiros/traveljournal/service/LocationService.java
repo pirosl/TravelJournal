@@ -7,23 +7,44 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
+/**
+ * LocationService class. Listen for device location changes and provides device latitude and
+ * longitude to any interested client. Used to geotag journal notes
+ *
+ * <p>
+ * This class is a singleton class.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class LocationService implements LocationListener {
+    private static final String TAG = LocationService.class.getSimpleName();
+
+    // static private class reference
     private static LocationService locationService = null;
+
     private static boolean initialized = false;
 
-    protected LocationManager locationManager;
+    // LocationManager instance
+    private LocationManager locationManager;
     private double latitude;
     private double longitude;
 
+    /**
+     * Private class constructor
+     */
     private LocationService() {
     }
 
+    /**
+     * Retuns singleton instance
+     *
+     * @return singleton instance
+     */
     public static LocationService getInstance() {
         if (locationService == null) {
             locationService = new LocationService();
@@ -32,8 +53,13 @@ public class LocationService implements LocationListener {
         return locationService;
     }
 
+    /**
+     * Set necesary information to be able to get location
+     *
+     * @param activity Activity to which location manager will be tight
+     */
     public void setActivity(Activity activity) {
-        if(!initialized) {
+        if (!initialized) {
             locationService.locationManager = (LocationManager) (activity.getSystemService(Context.LOCATION_SERVICE));
             if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity,
