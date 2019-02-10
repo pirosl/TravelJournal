@@ -1,0 +1,5 @@
+<paths>
+    <external-path
+        name="images"
+        path="Android/data/com.lucianpiros.traveljournal/files/Pictures" />
+</paths>

@@ -8,8 +8,8 @@
     <ImageView
         android:id="@+id/alertdialog_image"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
+        android:layout_height="@dimen/alertdialog_image_height"
+        android:scaleType="centerCrop"
         android:layout_weight="20"
         android:padding="@dimen/alert_imageview_padding"/>
     <ImageButton

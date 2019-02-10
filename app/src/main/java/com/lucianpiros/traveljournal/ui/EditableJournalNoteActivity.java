@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +27,8 @@ import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -32,6 +36,7 @@ import java.util.Random;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.os.ConfigurationCompat;
 import butterknife.BindView;
@@ -75,6 +80,8 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
     private boolean isAddFABExpanded;
     private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
     protected ProgressBarTask progressBarTask;
+
+    protected String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,29 +190,46 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         movieDialog.showLocal(AddNoteService.getInstance().getSelectedVideoUri());
     }
 
-    public void onOption1(int dialogType) {
-    /*    if (dialogType == PHOTO) {
-            Intent takephotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if(takephotoIntent.resolveActivity(getPackageManager()) != null){
-                String timeStamp =
-                        new SimpleDateFormat("yyyyMMdd_HHmmss",
-                                Locale.getDefault()).format(new Date());
-                String file = "IMG_" + timeStamp +".jpg";
-                File newfile = new File(file);
+   public void onOption1(int dialogType) {
+        if (dialogType == PHOTO) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
                 try {
-                    newfile.createNewFile();
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
                 }
-                catch (IOException e)
-                {
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "com.lucianpiros.traveljournal.fileprovider",
+                            photoFile);
+
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, TAKE_PHOTO);
                 }
-
-                //     Uri outputFileUri = Uri.fromFile(newfile);
-                Uri outputFileUri = FileProvider.getUriForFile(AddJournalNoteActivity.this, BuildConfig.APPLICATION_ID, newfile);
-
-                    takephotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                    startActivityForResult(takephotoIntent, TAKE_PHOTO);
             }
-        }*/
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_IMAGE";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpeg",
+                storageDir
+        );
+
+
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     public void onOption2(int dialogType) {

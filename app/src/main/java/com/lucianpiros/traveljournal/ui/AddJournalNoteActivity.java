@@ -3,6 +3,8 @@ package com.lucianpiros.traveljournal.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -11,6 +13,7 @@ import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -80,13 +83,24 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("TEST", requestCode + " " + resultCode);
         annimateAddFAB();
 
-        if ((requestCode == PICK_PHOTO || requestCode == TAKE_PHOTO)
+        if (requestCode == PICK_PHOTO
                 && resultCode == RESULT_OK
                 && null != data) {
             Uri selectedPhotoUri = data.getData();
             AddNoteService.getInstance().setSelectedPhotoUri(selectedPhotoUri);
+            notePictureBT.setVisibility(View.VISIBLE);
+        }
+        if (requestCode == TAKE_PHOTO
+                && resultCode == RESULT_OK ) {
+            File imgFile = new  File(mCurrentPhotoPath);
+            if(imgFile.exists())            {
+               Log.d(TAG, "Image taken from camera will be uploaded");
+                AddNoteService.getInstance().setSelectedPhotoUri(Uri.fromFile(imgFile));
+            }
+
             notePictureBT.setVisibility(View.VISIBLE);
         }
         if (requestCode == PICK_VIDEO && resultCode == RESULT_OK
