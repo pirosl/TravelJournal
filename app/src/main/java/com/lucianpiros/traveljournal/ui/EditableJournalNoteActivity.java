@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +53,7 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
     protected static final int PICK_PHOTO = 1;
     protected static final int PICK_VIDEO = 2;
     protected static final int TAKE_PHOTO = 3;
+    protected static final int TAKE_VIDEO = 4;
 
     @BindView(R.id.addnote_mainlayout)
     CoordinatorLayout mainLayout;
@@ -82,6 +84,7 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
     protected ProgressBarTask progressBarTask;
 
     protected String mCurrentPhotoPath;
+    protected String mCurrentVideoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,9 +203,8 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
                 try {
                     photoFile = createImageFile();
                 } catch (IOException ex) {
-                    // Error occurred while creating the File
+                    Log.d(TAG,  "Error creating temporary photo file " + ex.getMessage());
                 }
-                // Continue only if the File was successfully created
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
                             getString(R.string.fileprovider_authority),
@@ -213,6 +215,27 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
                 }
             }
         }
+       if (dialogType == VIDEO) {
+           Intent takePictureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+           // Ensure that there's a camera activity to handle the intent
+           if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+               File videoFile = null;
+               try {
+                   videoFile = createVideoFile();
+               } catch (IOException ex) {
+                   Log.d(TAG,  "Error creating temporary photo file " + ex.getMessage());
+               }
+               if (videoFile != null) {
+                   Uri videoURI = FileProvider.getUriForFile(this,
+                           getString(R.string.fileprovider_authority),
+                           videoFile);
+
+                   takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
+                   startActivityForResult(takePictureIntent, TAKE_VIDEO);
+               }
+           }
+       }
+
     }
 
     private File createImageFile() throws IOException {
@@ -222,8 +245,18 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
                 getString(R.string.photo_extension),
                 storageDir
         );
-
         mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private File createVideoFile() throws IOException {
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+        File image = File.createTempFile(
+                getString(R.string.video_tmpfilename),
+                getString(R.string.video_extension),
+                storageDir
+        );
+        mCurrentVideoPath = image.getAbsolutePath();
         return image;
     }
 

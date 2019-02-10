@@ -109,6 +109,16 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
             AddNoteService.getInstance().setSelectedVideoUri(selectedVideoUri);
             noteMovieBT.setVisibility(View.VISIBLE);
         }
+        if (requestCode == TAKE_VIDEO
+                && resultCode == RESULT_OK ) {
+            File imgFile = new  File(mCurrentVideoPath);
+            if(imgFile.exists())            {
+                Log.d(TAG, "Image taken from camera will be uploaded");
+                AddNoteService.getInstance().setSelectedVideoUri(Uri.fromFile(imgFile));
+            }
+
+            noteMovieBT.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

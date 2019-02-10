@@ -52,5 +52,7 @@
     <string name="fileprovider_authority" translatable="false">com.lucianpiros.traveljournal.fileprovider</string>
     <string name="photo_tmpfilename" translatable="false">tmp_photo</string>
     <string name="photo_extension" translatable="false">.jpeg</string>
+    <string name="video_tmpfilename" translatable="false">tmp_video</string>
+    <string name="video_extension" translatable="false">.mp4</string>
 
 </resources>
