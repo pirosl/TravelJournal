@@ -205,7 +205,7 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
-                            "com.lucianpiros.traveljournal.fileprovider",
+                            getString(R.string.fileprovider_authority),
                             photoFile);
 
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -216,17 +216,12 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
-        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_IMAGE";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,
-                ".jpeg",
+                getString(R.string.photo_tmpfilename),
+                getString(R.string.photo_extension),
                 storageDir
         );
-
-
 
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
