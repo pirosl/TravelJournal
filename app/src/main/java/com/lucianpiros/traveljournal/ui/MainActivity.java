@@ -130,19 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            // Generate title based on item position
-            /*switch (position) {
-                case 0:
-                    return mContext.getString(R.string.tab_notes);
-                case 1:
-                    return mContext.getString(R.string.tab_adventures);
-                case 2:
-                    return mContext.getString(R.string.tab_map);
-                case 3:
-                    return mContext.getString(R.string.tab_calendar);
-                default:
-                    return null;
-            }*/
+            // No title to be returned here - only icons on tabs
             return null;
         }
     }
