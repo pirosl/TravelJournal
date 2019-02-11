@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:hint="@string/note_title"
+            android:hint="@string/note_title_hint"
             android:inputType="text"
             android:textSize="@dimen/material_typography_regular_title_text_size" />
 
@@ -43,23 +43,26 @@
                     android:id="@+id/node_media_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:animateLayoutChanges="true"
                     android:gravity="end"
-                    android:animateLayoutChanges="true">
+                    android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/note_picture_btn"
+                        style="@style/ImageButton"
                         android:layout_width="@dimen/imagebutton_width"
                         android:layout_height="wrap_content"
-                        style="@style/ImageButton"
-                        android:src="@drawable/ic_has_photo"/>
+                        android:contentDescription="@string/note_picture_contentdescription"
+                        android:src="@drawable/ic_has_photo" />
+
                     <ImageButton
                         android:id="@+id/note_movie_btn"
+                        style="@style/ImageButton"
                         android:layout_width="@dimen/imagebutton_width"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/imagebutton_horizontal_margin"
-                        style="@style/ImageButton"
-                        android:src="@drawable/ic_has_movie"/>
+                        android:contentDescription="@string/note_movie_contentdescription"
+                        android:src="@drawable/ic_has_movie" />
                 </LinearLayout>
 
                 <EditText
@@ -70,10 +73,11 @@
                     android:background="@android:color/transparent"
                     android:enabled="true"
                     android:gravity="top"
+                    android:hint="@string/note_content_hint"
                     android:inputType="textMultiLine"
                     android:isScrollContainer="true"
-                    android:textSize="@dimen/material_typography_regular_body_1_text_size"
-                    android:maxLines="60" />
+                    android:maxLines="60"
+                    android:textSize="@dimen/material_typography_regular_body_1_text_size" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -120,5 +124,5 @@
         android:src="@android:drawable/ic_input_add"
         android:tint="@color/colorPrimary" />
 
-    <include layout="@layout/progressbar"/>
+    <include layout="@layout/progressbar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

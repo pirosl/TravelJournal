@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">TravelJournal</string>
 
-    <string name="note_title">Enter title</string>
+    <string name="note_title_hint">Enter title</string>
+    <string name="note_content_hint">Note content</string>s
 
     <string name="addnote_title">Add note</string>
     <string name="addnote_success">Note added</string>
