@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <ImageButton
         android:id="@+id/button_accept"
@@ -12,13 +12,14 @@
         android:layout_weight="1"
         android:contentDescription="@string/alerdialog_acceptbutton_contentdescription"
         android:src="@drawable/ic_yes" />
+
     <ImageButton
         android:id="@+id/button_decline"
+        style="@style/AlertDialogImageButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_no"
         android:layout_weight="1"
         android:contentDescription="@string/alerdialog_cancelbutton_contentdescription"
-        style="@style/AlertDialogImageButton" />
+        android:src="@drawable/ic_no" />
 
 </LinearLayout>
