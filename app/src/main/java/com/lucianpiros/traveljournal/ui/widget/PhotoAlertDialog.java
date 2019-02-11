@@ -2,7 +2,6 @@ package com.lucianpiros.traveljournal.ui.widget;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -10,15 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.GlideApp;
-
-import java.io.File;
 
 import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
