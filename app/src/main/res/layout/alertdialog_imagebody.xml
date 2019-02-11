@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     android:windowBackground="@android:color/transparent">
 
     <ImageView
         android:id="@+id/alertdialog_image"
         android:layout_width="0dp"
         android:layout_height="@dimen/alertdialog_image_height"
-        android:scaleType="centerCrop"
         android:layout_weight="20"
-        android:padding="@dimen/alert_imageview_padding"/>
+        android:contentDescription="@string/note_picture_contentdescription"
+        android:padding="@dimen/alert_imageview_padding"
+        android:scaleType="centerCrop" />
+
     <ImageButton
         android:id="@+id/alertdialog_title_close"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
-        android:foregroundGravity="top"
-        android:tint="@color/colorAccent"
-        android:background="@null"
-        android:layout_alignParentTop="true"
         android:layout_weight="1"
-        android:src="@drawable/ic_close"/>
+        android:background="@null"
+        android:contentDescription="@string/alertdialog_closebutton_contentdescription"
+        android:foregroundGravity="top"
+        android:src="@drawable/ic_close"
+        android:tint="@color/colorAccent" />
 </LinearLayout>
