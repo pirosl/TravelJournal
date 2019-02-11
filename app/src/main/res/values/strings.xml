@@ -52,6 +52,9 @@
     <string name="alertdialog_closebutton_contentdescription">Close dialog button</string>
     <string name="alertdialog_defaulttitle">Title</string>
 
+    <string name="exoplayer_playbutton_contentdescription">Play video</string>
+    <string name="exoplayer_pausebutton_contentdescription">Pause video</string>
+
     <string name="fileprovider_authority" translatable="false">com.lucianpiros.traveljournal.fileprovider</string>
     <string name="photo_tmpfilename" translatable="false">tmp_photo</string>
     <string name="photo_extension" translatable="false">.jpeg</string>
