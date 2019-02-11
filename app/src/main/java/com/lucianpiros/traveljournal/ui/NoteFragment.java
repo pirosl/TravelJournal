@@ -38,6 +38,8 @@ import butterknife.OnClick;
 
 public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNoteServiceListener, ConfirmationDialog.ConfirmationDialogActionListener {
 
+    private static final int NOTSELECTED_IDX = -1;
+
     @BindView(R.id.viewnote_mainlayout)
     CoordinatorLayout mainLayout;
     @BindView(R.id.note_date)
@@ -81,7 +83,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         // Retrieve recipe idx passed as parameter from Main Activity
         Bundle bundle = getArguments();
 
-        noteIdx = -1;
+        noteIdx = NOTSELECTED_IDX;
         if(bundle != null)
             noteIdx = bundle.getInt(getResources()
                     .getString(R.string.noteactivity_extra_param));
@@ -93,24 +95,27 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     public void onStart() {
         super.onStart();
 
-        note = FirebaseDB.getInstance().getNote(noteIdx);
+        if(noteIdx != NOTSELECTED_IDX) {
+            note = FirebaseDB.getInstance().getNote(noteIdx);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(note.getNoteTitle());
-        noteContentTV.setText(note.getNoteContent());
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(note.getNoteTitle());
+            noteContentTV.setText(note.getNoteContent());
 
-        SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
-        noteDateTV.setText(dateSF.format(note.getNoteCreationDate()));
+            SimpleDateFormat dateSF = new SimpleDateFormat("d MMM yyyy");
+            noteDateTV.setText(dateSF.format(note.getNoteCreationDate()));
 
-        String photoURL = note.getPhotoDownloadURL();
-        if(photoURL != null && photoURL.length() > 0) {
-            notePictureBT.setVisibility(View.VISIBLE);
-        }
+            String photoURL = note.getPhotoDownloadURL();
+            if (photoURL != null && photoURL.length() > 0) {
+                notePictureBT.setVisibility(View.VISIBLE);
+            }
 
-        String moviewURL = note.getMovieDownloadURL();
-        if(moviewURL != null && moviewURL.length() > 0) {
-            noteMovieBT.setVisibility(View.VISIBLE);
+            String moviewURL = note.getMovieDownloadURL();
+            if (moviewURL != null && moviewURL.length() > 0) {
+                noteMovieBT.setVisibility(View.VISIBLE);
+            }
         }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
