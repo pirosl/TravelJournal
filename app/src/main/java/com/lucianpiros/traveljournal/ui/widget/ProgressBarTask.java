@@ -8,6 +8,13 @@ import android.view.animation.AlphaAnimation;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Class managing / showing a progress bar.
+ * Used in persistent operations.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class ProgressBarTask extends AsyncTask<Void, Void, Void> {
 
     private ViewGroup progressBarHolder;
