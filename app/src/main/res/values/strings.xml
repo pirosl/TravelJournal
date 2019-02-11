@@ -50,6 +50,7 @@
     <string name="alerdialog_acceptbutton_contentdescription">Yes button</string>
     <string name="alerdialog_cancelbutton_contentdescription">Cancel button</string>
     <string name="alertdialog_closebutton_contentdescription">Close dialog button</string>
+    <string name="alertdialog_defaulttitle">Title</string>
 
     <string name="fileprovider_authority" translatable="false">com.lucianpiros.traveljournal.fileprovider</string>
     <string name="photo_tmpfilename" translatable="false">tmp_photo</string>
