@@ -118,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
 
                 return notesFragment;
             }
+            if (position == 3) {
+                CalendarFragment calendarFragment = new CalendarFragment();
+
+                return calendarFragment;
+            }
 
             AdventuresFragment adventuresFragment = new AdventuresFragment();
             return adventuresFragment;

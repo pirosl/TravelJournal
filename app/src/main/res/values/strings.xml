@@ -51,6 +51,7 @@
     <string name="alerdialog_cancelbutton_contentdescription">Cancel button</string>
     <string name="alertdialog_closebutton_contentdescription">Close dialog button</string>
     <string name="alertdialog_defaulttitle">Title</string>
+    <string name="alertdialog_movie_localfilename" translatable="false">tmp_movie.mp4</string>
 
     <string name="exoplayer_playbutton_contentdescription">Play video</string>
     <string name="exoplayer_pausebutton_contentdescription">Pause video</string>
@@ -60,5 +61,32 @@
     <string name="photo_extension" translatable="false">.jpeg</string>
     <string name="video_tmpfilename" translatable="false">tmp_video</string>
     <string name="video_extension" translatable="false">.mp4</string>
+
+    <string name="material_calendar_monday">M</string>
+    <string name="material_calendar_tuesday">T</string>
+    <string name="material_calendar_wednesday">W</string>
+    <string name="material_calendar_thursday">T</string>
+    <string name="material_calendar_friday">F</string>
+    <string name="material_calendar_saturday">S</string>
+    <string name="material_calendar_sunday">S</string>
+
+    <array name="material_calendar_months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </array>
+
+    <string name="material_calendar_today_button">Today</string>
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
 
 </resources>
