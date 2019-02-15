@@ -73,8 +73,8 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
     }
 
     @Override
-    public void OnNotesListChanged(List<Note> notesList) {
-        NotesAdapter adapter = new NotesAdapter(notesList, this);
+    public void OnNotesListChanged() {
+        NotesAdapter adapter = new NotesAdapter(this);
         noteRV.setAdapter(adapter);
     }
 

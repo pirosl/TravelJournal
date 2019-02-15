@@ -2,7 +2,9 @@ package com.lucianpiros.traveljournal.data;
 
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +31,7 @@ public class FirebaseDB {
     private static final String TAG = FirebaseDB.class.getSimpleName();
 
     public interface NoteDBEventsListener {
-        void OnNotesListChanged(List<Note> notesList);
+        void OnNotesListChanged();
     }
 
     public interface OnDBCompleteListener {
@@ -44,7 +46,6 @@ public class FirebaseDB {
     private NoteDBEventsListener noteDBEventsListener;
     private OnDBCompleteListener onDBCompleteListener;
 
-    private ArrayList<Note> notes;
     private Map<String, Note> notesMap;
 
     /**
@@ -57,7 +58,6 @@ public class FirebaseDB {
         if(firebaseDB == null) {
             firebaseDB = new FirebaseDB();
             firebaseDB.databaseReference = FirebaseDatabase.getInstance().getReference();
-            firebaseDB.notes = new ArrayList<>();
             firebaseDB.notesMap = new HashMap<>();
         }
 
@@ -77,9 +77,11 @@ public class FirebaseDB {
     public void insert(@NonNull Note note) {
         try {
             DatabaseReference childRefference = databaseReference.child(DatabaseStructure.NotesTable).push();
-            childRefference.setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+            Task<Void> insertTask = childRefference.setValue(note);
+            insertTask.addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
+                    Log.d(TAG, "Note insertion result " + task.isSuccessful());
                     String childKey = null;
                     if(task.isSuccessful()) {
                         childKey = childRefference.getKey();
@@ -106,27 +108,27 @@ public class FirebaseDB {
         });;
     }
 
-    public ArrayList<Note> retrieveNotes() {
+    public void retrieveNotes() {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 fetchData(dataSnapshot);
 
-                noteDBEventsListener.OnNotesListChanged(notes);
+                noteDBEventsListener.OnNotesListChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 fetchData(dataSnapshot);
 
-                noteDBEventsListener.OnNotesListChanged(notes);
+                noteDBEventsListener.OnNotesListChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 fetchData(dataSnapshot);
 
-                noteDBEventsListener.OnNotesListChanged(notes);
+                noteDBEventsListener.OnNotesListChanged();
             }
 
             @Override
@@ -139,26 +141,23 @@ public class FirebaseDB {
 
             }
         });
-
-        return notes;
     }
 
     public Note getNote(String key) {
         return notesMap.get(key);
     }
 
-    public Note getNote(int noteIdx) {
-        return notes.get(noteIdx);
-    }
 
     private void fetchData(DataSnapshot dataSnapshot) {
-        notes.clear();
+        List<Note> notes = new ArrayList<>();
         notesMap.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Note name = ds.getValue(Note.class);
             notes.add(name);
             notesMap.put(ds.getKey(), name);
         }
+
+        DataCache.getInstance().setNotesList(notes);
     }
 
     public void deleteNote(@NotNull Note note) {

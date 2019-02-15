@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.DeleteNoteService;
@@ -96,7 +97,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         super.onStart();
 
         if(noteIdx != NOTSELECTED_IDX) {
-            note = FirebaseDB.getInstance().getNote(noteIdx);
+            note = DataCache.getInstance().getNote(noteIdx);
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(note.getNoteTitle());
             noteContentTV.setText(note.getNoteContent());
