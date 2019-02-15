@@ -30,6 +30,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
 
+/**
+ * Application main activity
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.mainactivity_viewpager)
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.mainactivity_tabs)
     TabLayout tabLayout;
 
+    // array of resource ids used as icons for the tab
     final private static int[] tabIconRids = {R.drawable.ic_notes, R.drawable.ic_adventures, R.drawable.ic_map, R.drawable.ic_calendar};
 
     @Override
@@ -51,13 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        // Create an adapter that knows which fragment should be shown on each page
         JournalFramentPagerAdapter adapter = new JournalFramentPagerAdapter(getApplicationContext(), getSupportFragmentManager());
-
-        // Set the adapter onto the view pager
         viewPager.setAdapter(adapter);
-
-        // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
 
         ColorStateList colors;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
+
+            assert tab != null;
+
             tab.setIcon(tabIconRids[i]);
             Drawable icon = tab.getIcon();
 
@@ -101,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * FragmentPageAdapter supporting tab creation.
+     *
+     * @author Lucian Piros
+     * @version 1.0
+     */
     class JournalFramentPagerAdapter extends FragmentPagerAdapter {
 
         private Context mContext;
@@ -110,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
             mContext = context;
         }
 
-        // This determines the fragment for each tab
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
@@ -119,14 +129,10 @@ public class MainActivity extends AppCompatActivity {
                 return notesFragment;
             }
             if (position == 2) {
-                MapFragment mapFragment = new MapFragment();
-
-                return mapFragment;
+                return new MapFragment();
             }
             if (position == 3) {
-                CalendarFragment calendarFragment = new CalendarFragment();
-
-                return calendarFragment;
+                return new CalendarFragment();
             }
 
             AdventuresFragment adventuresFragment = new AdventuresFragment();
@@ -135,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return tabIconRids.length;
         }
 
         @Override
