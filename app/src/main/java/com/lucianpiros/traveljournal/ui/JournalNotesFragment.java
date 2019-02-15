@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 /**
- * Fragment displaying a list of notes
+ * Fragment displaying a list of notes. If master-detail note detail will be displayed allongside list of notes
  *
  * @author Lucian Piros
  * @version 1.0
