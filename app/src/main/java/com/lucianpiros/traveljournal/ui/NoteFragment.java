@@ -3,7 +3,6 @@ package com.lucianpiros.traveljournal.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
-import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.DeleteNoteService;
 import com.lucianpiros.traveljournal.ui.widget.ConfirmationDialog;
@@ -37,8 +35,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Fragment displaying a single note. Handle note edit and note delete requests.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNoteServiceListener, ConfirmationDialog.ConfirmationDialogActionListener {
 
+    private final static String TAG = NoteFragment.class.getSimpleName();
+
+    // value indicating no note was passed in when fragment was launched
     private static final int NOTSELECTED_IDX = -1;
 
     @BindView(R.id.viewnote_mainlayout)
@@ -60,6 +67,9 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     private ProgressBarTask progressBarTask;
     private int noteIdx;
 
+    /**
+     * Class constructor
+     */
     public NoteFragment() {
     }
 
@@ -85,7 +95,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         Bundle bundle = getArguments();
 
         noteIdx = NOTSELECTED_IDX;
-        if(bundle != null)
+        if (bundle != null)
             noteIdx = bundle.getInt(getResources()
                     .getString(R.string.noteactivity_extra_param));
 
@@ -96,7 +106,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     public void onStart() {
         super.onStart();
 
-        if(noteIdx != NOTSELECTED_IDX) {
+        if (noteIdx != NOTSELECTED_IDX) {
             note = DataCache.getInstance().getNote(noteIdx);
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(note.getNoteTitle());
@@ -128,6 +138,12 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         changeTintColor(menu, R.id.action_delete);
     }
 
+    /**
+     * Change tint color for menu item
+     *
+     * @param menu    - menu on which color should be changed
+     * @param menuRid = menu resource id
+     */
     private void changeTintColor(Menu menu, int menuRid) {
         Drawable drawable = menu.findItem(menuRid).getIcon();
         drawable = DrawableCompat.wrap(drawable);
@@ -150,6 +166,9 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         }
     }
 
+    /**
+     * Delete note
+     */
     private void deleteNote() {
         ConfirmationDialog confirmationDialog = new ConfirmationDialog(layoutInflater, getContext());
         confirmationDialog.setConfirmationDialogActionListener(this);
@@ -157,6 +176,9 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         confirmationDialog.show();
     }
 
+    /**
+     * Edit note. Launch edit note activity
+     */
     private void editNote() {
         Intent intent = new Intent(this.getContext(), EditJournalNoteActivity.class);
         intent.putExtra(getResources().getString(R.string.noteactivity_extra_param), note.getNoteKey());
