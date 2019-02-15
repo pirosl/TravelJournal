@@ -6,6 +6,12 @@ import com.lucianpiros.traveljournal.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Activity displaying a single note (nested fragment)
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class NoteActivity extends AppCompatActivity {
     private final String LOG_TAG = NoteActivity.class.getSimpleName();
 
@@ -16,6 +22,9 @@ public class NoteActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Bundle bundle = getIntent().getExtras();
+
+            assert bundle != null;
+
             int noteIdx = bundle.getInt(getResources()
                     .getString(R.string.noteactivity_extra_param));
 
