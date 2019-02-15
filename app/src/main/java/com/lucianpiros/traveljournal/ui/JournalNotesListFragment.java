@@ -28,6 +28,12 @@ import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 
+/**
+ * Fragment displaying a list of notes. Implements @FirebaseDB.NoteDBEventsListener so UI updated when underlying data is updated.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class JournalNotesListFragment extends Fragment implements FirebaseDB.NoteDBEventsListener, NotesAdapter.OnItemSelectedListener {
 
     public interface OnItemSelectedListener {
@@ -40,6 +46,9 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
 
     private OnItemSelectedListener onItemSelectedListener;
 
+    /**
+     * Class constructor
+     */
     public JournalNotesListFragment() {
 
     }
