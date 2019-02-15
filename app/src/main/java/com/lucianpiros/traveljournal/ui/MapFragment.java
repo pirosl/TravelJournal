@@ -21,12 +21,15 @@ import com.lucianpiros.traveljournal.R;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MapFragment extends Fragment {
 
     private final static String TAG = MapFragment.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
 
+    @BindView(R.id.mapView)
     MapView mMapView;
     private GoogleMap googleMap;
 
@@ -34,7 +37,8 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        ButterKnife.bind(this, rootView);
+
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
@@ -61,6 +65,7 @@ public class MapFragment extends Fragment {
                 }
 
                 googleMap.setMyLocationEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
 
                 // For dropping a marker at a point on the Map
                 LatLng sydney = new LatLng(-34, 151);
@@ -82,6 +87,7 @@ public class MapFragment extends Fragment {
             case PERMISSIONS_REQUEST_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setZoomControlsEnabled(true);
 
                     LatLng sydney = new LatLng(-34, 151);
                     googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
