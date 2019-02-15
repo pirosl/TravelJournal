@@ -3,7 +3,6 @@ package com.lucianpiros.traveljournal.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +17,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.os.ConfigurationCompat;
 
+/**
+ * Add note activity. Extends @EditableJournalNoteActivity and implements @AddNoteService.AddNoteServiceListener interface.
+ * Used for adding journal notes
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class AddJournalNoteActivity extends EditableJournalNoteActivity implements AddNoteService.AddNoteServiceListener {
 
     private static final String TAG = AddJournalNoteActivity.class.getSimpleName();
@@ -62,6 +67,9 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
         }
     }
 
+    /**
+     * Add note to Firebase
+     */
     private void addNote() {
         if (isValid(noteTitleET) && isValid(noteContentET)) {
             progressBarTask = new ProgressBarTask(progressBarHolder, this);
@@ -94,10 +102,10 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
             notePictureBT.setVisibility(View.VISIBLE);
         }
         if (requestCode == TAKE_PHOTO
-                && resultCode == RESULT_OK ) {
-            File imgFile = new  File(mCurrentPhotoPath);
-            if(imgFile.exists())            {
-               Log.d(TAG, "Image taken from camera will be uploaded");
+                && resultCode == RESULT_OK) {
+            File imgFile = new File(mCurrentPhotoPath);
+            if (imgFile.exists()) {
+                Log.d(TAG, "Image taken from camera will be uploaded");
                 AddNoteService.getInstance().setSelectedPhotoUri(Uri.fromFile(imgFile));
             }
 
@@ -110,9 +118,9 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
             noteMovieBT.setVisibility(View.VISIBLE);
         }
         if (requestCode == TAKE_VIDEO
-                && resultCode == RESULT_OK ) {
-            File imgFile = new  File(mCurrentVideoPath);
-            if(imgFile.exists())            {
+                && resultCode == RESULT_OK) {
+            File imgFile = new File(mCurrentVideoPath);
+            if (imgFile.exists()) {
                 Log.d(TAG, "Image taken from camera will be uploaded");
                 AddNoteService.getInstance().setSelectedVideoUri(Uri.fromFile(imgFile));
             }
