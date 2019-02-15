@@ -44,6 +44,7 @@
     <string name="viewnote_deletetitle">Delete Note</string>
 
     <string name="note_dateformat" translatable="false">d MMM yyyy</string>
+    <string name="noaddednot_ondate">No note added on %s</string>
 
     <string name="note_picture_contentdescription">Picture associated with current note</string>
     <string name="note_movie_contentdescription">Movie associated with current note</string>

@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Note;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +23,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +40,8 @@ public class CalendarFragment extends Fragment {
 
     @BindView(R.id.calendar)
     CalendarView calendarCV;
+    @BindView(R.id.fragment_layout)
+    ConstraintLayout fragmentLayout;
 
     public CalendarFragment() {
     }
@@ -79,8 +85,8 @@ public class CalendarFragment extends Fragment {
             List<Note> notes = DataCache.getInstance().getNotesList();
             if(notes != null) {
                 for (Note note : notes) {
-                    Date creationDate = note.getNoteCreationDate();
-                    Calendar calendar = new GregorianCalendar(1900 + creationDate.getYear(), creationDate.getMonth(), creationDate.getDay());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(note.getNoteCreationDate());
                     EventDay eventDay = new EventDay(calendar, R.drawable.ic_notes);
 
                     eventDays.add(eventDay);
@@ -96,8 +102,16 @@ public class CalendarFragment extends Fragment {
             calendarCV.setOnDayClickListener(new OnDayClickListener() {
                 @Override
                 public void onDayClick(EventDay eventDay) {
-                    Calendar c = eventDay.getCalendar();
-                    Log.d("Test", "clicked on " + c.toString());
+                    if(eventDays.contains(eventDay)) {
+
+                    }
+                    else {
+                        Calendar calendar = eventDay.getCalendar();
+                        SimpleDateFormat dateSF = new SimpleDateFormat(getString(R.string.note_dateformat), ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0));
+                        String message = String.format(getResources().getString(R.string.noaddednot_ondate), dateSF.format(calendar.getTime()));
+
+                        Snackbar.make(fragmentLayout, message, Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
