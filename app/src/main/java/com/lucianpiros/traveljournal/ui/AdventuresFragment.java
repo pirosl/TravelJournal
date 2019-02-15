@@ -10,6 +10,12 @@ import com.lucianpiros.traveljournal.R;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+/**
+ * Adventures fragment. Displays a list of adventures
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class AdventuresFragment extends Fragment {
 
     public AdventuresFragment() {
