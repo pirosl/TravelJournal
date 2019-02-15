@@ -10,23 +10,27 @@ import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
-import com.lucianpiros.traveljournal.service.AddNoteService;
 import com.lucianpiros.traveljournal.service.UpdateNoteService;
 import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
 
-import androidx.core.os.ConfigurationCompat;
 import butterknife.OnClick;
 
+/**
+ * Edit note activity. Extends @EditableJournalNoteActivity and implements @UpdateNoteService.UpdateNoteServiceListener interface.
+ * Used to edit and save notes
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class EditJournalNoteActivity extends EditableJournalNoteActivity implements UpdateNoteService.UpdateNoteServiceListener {
 
     private static final String TAG = EditJournalNoteActivity.class.getSimpleName();
 
+    // Note to be updated
     private Note note;
 
     @Override
@@ -47,12 +51,12 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity impleme
             noteDateTV.setText(dateSF.format(note.getNoteCreationDate()));
 
             String photoURL = note.getPhotoDownloadURL();
-            if(photoURL != null && photoURL.length() > 0) {
+            if (photoURL != null && photoURL.length() > 0) {
                 notePictureBT.setVisibility(View.VISIBLE);
             }
 
             String moviewURL = note.getMovieDownloadURL();
-            if(moviewURL != null && moviewURL.length() > 0) {
+            if (moviewURL != null && moviewURL.length() > 0) {
                 noteMovieBT.setVisibility(View.VISIBLE);
             }
         }
@@ -72,6 +76,9 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity impleme
         }
     }
 
+    /**
+     * Save note
+     */
     private void saveNote() {
         if (isValid(noteTitleET) && isValid(noteContentET)) {
             progressBarTask = new ProgressBarTask(progressBarHolder, this);
@@ -135,10 +142,9 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity impleme
         PhotoAlertDialog photoDialog = new PhotoAlertDialog(this.getLayoutInflater(), this);
         photoDialog.initialize(viewGroup);
 
-        if(UpdateNoteService.getInstance().getSelectedPhotoUri() != null) {
+        if (UpdateNoteService.getInstance().getSelectedPhotoUri() != null) {
             photoDialog.showLocal(UpdateNoteService.getInstance().getSelectedPhotoUri());
-        }
-        else {
+        } else {
             photoDialog.showRemote(note.getPhotoDownloadURL());
         }
     }
@@ -148,10 +154,9 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity impleme
         MovieAlertDialog movieDialog = new MovieAlertDialog(this.getLayoutInflater(), this);
         movieDialog.initialize(viewGroup);
 
-        if(UpdateNoteService.getInstance().getSelectedVideoUri() != null) {
+        if (UpdateNoteService.getInstance().getSelectedVideoUri() != null) {
             movieDialog.showLocal(UpdateNoteService.getInstance().getSelectedVideoUri());
-        }
-        else {
+        } else {
             movieDialog.showRemote(note.getNoteKey(), note.getMovieDownloadURL());
         }
     }
