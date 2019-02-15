@@ -2,21 +2,31 @@ package com.lucianpiros.traveljournal.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lucianpiros.traveljournal.R;
-import com.lucianpiros.traveljournal.data.adapter.NotesAdapter;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+/**
+ * Fragment displaying a list of notes
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class JournalNotesFragment extends Fragment implements JournalNotesListFragment.OnItemSelectedListener {
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
+    // is this a master-detail fragment
     private boolean mMasterDetailFlow;
 
+    /**
+     * Class constructor
+     */
     public JournalNotesFragment() {
 
     }
@@ -36,6 +46,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
         JournalNotesListFragment journalNotesListFragment = new JournalNotesListFragment();//(JournalNotesListFragment) getFragmentManager().findFragmentById(R.id.fragment_journalnotes);
         journalNotesListFragment.setOnItemSelectedListener(this);
 
+        assert getFragmentManager() != null;
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_journalnotes, journalNotesListFragment, "")
@@ -51,8 +62,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
                         .replace(R.id.note_fragment, new NoteFragment(), DETAILFRAGMENT_TAG)
                         .commit();
             }
-        }
-        else {
+        } else {
             mMasterDetailFlow = false;
         }
 
@@ -62,7 +72,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
 
     @Override
     public void onItemSelected(int noteIdx) {
-        if(mMasterDetailFlow) {
+        if (mMasterDetailFlow) {
             Bundle arguments = new Bundle();
             arguments.putInt(getResources().getString(R.string.noteactivity_extra_param), noteIdx);
 
@@ -72,8 +82,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.note_fragment, noteFragment, DETAILFRAGMENT_TAG)
                     .commit();
-        }
-        else {
+        } else {
             Intent intent = new Intent(this.getContext(), NoteActivity.class);
             intent.putExtra(getResources().getString(R.string.noteactivity_extra_param), noteIdx);
             startActivity(intent);
