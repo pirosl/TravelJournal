@@ -1,13 +1,20 @@
 package com.lucianpiros.traveljournal.ui;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.android.material.tabs.TabLayout;
+import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.service.LocationService;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -15,17 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Bundle;
-
-import com.lucianpiros.traveljournal.R;
-import com.lucianpiros.traveljournal.service.LocationService;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
@@ -65,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
         ColorStateList colors;
         if (Build.VERSION.SDK_INT >= 23) {
             colors = getResources().getColorStateList(R.color.tab_tint_color, getTheme());
-        }
-        else {
+        } else {
             colors = getResources().getColorStateList(R.color.tab_tint_color);
         }
 
