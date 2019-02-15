@@ -8,8 +8,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.annotations.NotNull;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
@@ -30,20 +27,23 @@ import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.os.ConfigurationCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Represents an editable note activitty.
+ * Used to add and edit a note.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public abstract class EditableJournalNoteActivity extends AppCompatActivity implements CustomAlertDialog.CustomDialogActionListener {
 
     private static final String TAG = EditableJournalNoteActivity.class.getSimpleName();
@@ -80,7 +80,11 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
     ViewGroup viewGroup;
 
     private boolean isAddFABExpanded;
+
+    // animations used for FloatingActionButtons
     private Animation expandFABAnimation, collapseFABAnimation, closeFABAnimation, openFABAnimation;
+
+    // ProgressBar to be displayed when add / save operation takes place.
     protected ProgressBarTask progressBarTask;
 
     protected String mCurrentPhotoPath;
@@ -132,6 +136,12 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         return true;
     }
 
+    /**
+     * Returns true if passed in TextView contains information
+     *
+     * @param textView - TextView to be checked
+     * @return - true if TextView contains info, false otherwise
+     */
     protected boolean isValid(@NotNull TextView textView) {
         CharSequence text = textView.getText();
 
@@ -193,7 +203,8 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         movieDialog.showLocal(AddNoteService.getInstance().getSelectedVideoUri());
     }
 
-   public void onOption1(int dialogType) {
+    @Override
+    public void onOption1(int dialogType) {
         if (dialogType == PHOTO) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             // Ensure that there's a camera activity to handle the intent
@@ -203,7 +214,7 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
                 try {
                     photoFile = createImageFile();
                 } catch (IOException ex) {
-                    Log.d(TAG,  "Error creating temporary photo file " + ex.getMessage());
+                    Log.d(TAG, "Error creating temporary photo file " + ex.getMessage());
                 }
                 if (photoFile != null) {
                     Uri photoURI = FileProvider.getUriForFile(this,
@@ -215,29 +226,35 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
                 }
             }
         }
-       if (dialogType == VIDEO) {
-           Intent takePictureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-           // Ensure that there's a camera activity to handle the intent
-           if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-               File videoFile = null;
-               try {
-                   videoFile = createVideoFile();
-               } catch (IOException ex) {
-                   Log.d(TAG,  "Error creating temporary photo file " + ex.getMessage());
-               }
-               if (videoFile != null) {
-                   Uri videoURI = FileProvider.getUriForFile(this,
-                           getString(R.string.fileprovider_authority),
-                           videoFile);
+        if (dialogType == VIDEO) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                File videoFile = null;
+                try {
+                    videoFile = createVideoFile();
+                } catch (IOException ex) {
+                    Log.d(TAG, "Error creating temporary photo file " + ex.getMessage());
+                }
+                if (videoFile != null) {
+                    Uri videoURI = FileProvider.getUriForFile(this,
+                            getString(R.string.fileprovider_authority),
+                            videoFile);
 
-                   takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
-                   startActivityForResult(takePictureIntent, TAKE_VIDEO);
-               }
-           }
-       }
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
+                    startActivityForResult(takePictureIntent, TAKE_VIDEO);
+                }
+            }
+        }
 
     }
 
+    /**
+     * Creates a temporary image file
+     *
+     * @return newly created file
+     * @throws IOException if file can't be created
+     */
     private File createImageFile() throws IOException {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -249,6 +266,12 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         return image;
     }
 
+    /**
+     * Creates a temporary video file
+     *
+     * @return newly created file
+     * @throws IOException if file can't be created
+     */
     private File createVideoFile() throws IOException {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
         File image = File.createTempFile(
@@ -260,6 +283,7 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         return image;
     }
 
+    @Override
     public void onOption2(int dialogType) {
         if (dialogType == PHOTO) {
             Intent takephotoIntent = new Intent(Intent.ACTION_GET_CONTENT);
