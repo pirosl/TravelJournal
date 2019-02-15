@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 return new MapFragment();
             }
             if (position == 3) {
-                return new CalendarFragment();
+                return new CalendarContainerFragment();
             }
 
             AdventuresFragment adventuresFragment = new AdventuresFragment();
