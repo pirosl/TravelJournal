@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 return notesFragment;
             }
             if (position == 2) {
-                return new MapFragment();
+                return new MapContainerFragment();
             }
             if (position == 3) {
                 return new CalendarContainerFragment();
