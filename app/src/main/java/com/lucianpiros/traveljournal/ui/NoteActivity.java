@@ -23,15 +23,6 @@ public class NoteActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle arguments = getIntent().getExtras();
 
-            //assert argu != null;
-
-            /*String noteIdx = bundle.getInt(getResources()
-                    .getString(R.string.noteactivity_extra_param));
-
-            Bundle arguments = new Bundle();
-            arguments.putInt(getResources()
-                    .getString(R.string.noteactivity_extra_param), noteIdx);
-            */
             NoteFragment fragment = new NoteFragment();
             fragment.setArguments(arguments);
 
