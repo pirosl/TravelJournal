@@ -42,7 +42,10 @@
     <string name="noteslistactivity_type" translatable="false">noteslistactivity_type</string>
     <string name="noteslistactivity_calendar" translatable="false">noteslistactivity_calendar</string>
     <string name="noteslistactivity_calendar_timezone" translatable="false">noteslistactivity_calendar_timezone</string>
+    <string name="noteslistactivity_latitude" translatable="false">noteslistactivity_latitude</string>
+    <string name="noteslistactivity_longitude" translatable="false">noteslistactivity_longitude</string>
     <string name="noteslistfiltered_ondate">Notes created on %s</string>
+    <string name="noteslistfiltered_ongeofence">Geofenced notes</string>
 
     <string name="addnote_savetitle">Save</string>
     <string name="viewnote_edittitle">Edit Note</string>

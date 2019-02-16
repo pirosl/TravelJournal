@@ -25,19 +25,23 @@ import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.maps.android.SphericalUtil;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
+import com.lucianpiros.traveljournal.data.adapter.AdapterFilter;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.LocationService;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -64,7 +68,7 @@ public class MapFragment extends Fragment {
     private float heights[];
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         ButterKnife.bind(this, rootView);
@@ -98,8 +102,6 @@ public class MapFragment extends Fragment {
                 googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                     @Override
                     public void onCameraIdle() {
-                        //  float zoomLevel=googleMap.getCameraPosition().zoom;
-                        Snackbar.make(fragmentLayout, "Zoom factor" + zoomFactor, Snackbar.LENGTH_SHORT).show();
                         addMapOverlay();
                     }
                 });
@@ -171,13 +173,30 @@ public class MapFragment extends Fragment {
             @Override
             public void onGroundOverlayClick(GroundOverlay groundOverlay) {
                 LatLng latLng = groundOverlay.getPosition();
-                Snackbar.make(fragmentLayout, "Messages at" + latLng.latitude + " " + latLng.longitude, Snackbar.LENGTH_SHORT).show();
+
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+
+                JournalNotesFragment  journalNotesFragment = new JournalNotesFragment();
+                Bundle arguments = new Bundle();
+                arguments.putBoolean(getResources().getString(R.string.noteslistactivity_filtered), true);
+                arguments.putInt(getResources().getString(R.string.noteslistactivity_type), AdapterFilter.FILTERTYPE_GEOFENCE);
+
+                arguments.putDouble(getResources().getString(R.string.noteslistactivity_latitude), latLng.latitude);
+                arguments.putDouble(getResources().getString(R.string.noteslistactivity_longitude), latLng.longitude);
+
+                journalNotesFragment.setArguments(arguments);
+
+                trans.replace(R.id.mapcontainer, journalNotesFragment);
+
+                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                trans.addToBackStack(null);
+
+                trans.commit();
             }
         });
 
         CameraPosition cameraPosition = new CameraPosition.Builder().target(here).zoom(12).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
     }
 
     private void addMapOverlay() {

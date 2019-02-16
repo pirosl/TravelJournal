@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
@@ -97,6 +98,13 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
                 SimpleDateFormat dateSF = new SimpleDateFormat(getString(R.string.note_dateformat), ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0));
                 String message = String.format(getResources().getString(R.string.noteslistfiltered_ondate), dateSF.format(calendar.getTime()));
                 getActivity().setTitle(message);
+            }
+            if(adapterFilter.getFilterType() == AdapterFilter.FILTERTYPE_GEOFENCE) {
+                double latitude = arguments.getDouble(getResources().getString(R.string.noteslistactivity_latitude));
+                double longitude = arguments.getDouble(getResources().getString(R.string.noteslistactivity_longitude));
+                adapterFilter.setLatLng(new LatLng(latitude, longitude));
+
+                getActivity().setTitle(getResources().getString(R.string.noteslistfiltered_ongeofence));
             }
         }
 

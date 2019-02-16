@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Note;
@@ -100,6 +102,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     if(calendar.get(Calendar.YEAR) == cn.get(Calendar.YEAR) &&
                             calendar.get(Calendar.MONTH) == cn.get(Calendar.MONTH) &&
                             calendar.get(Calendar.DAY_OF_MONTH) == cn.get(Calendar.DAY_OF_MONTH)) {
+                        this.notesList.add(n);
+                    }
+                }
+            }
+
+            if(adapterFilter.getFilterType() == AdapterFilter.FILTERTYPE_GEOFENCE) {
+                LatLng latLng = adapterFilter.getLatLng();
+                this.notesList = new ArrayList<>();
+                List<Note> workingList = DataCache.getInstance().getNotesList();
+                for(Note n : workingList) {
+                    LatLng noteLatLng = new LatLng(n.getLatitude(), n.getLongitude());
+                    double distance = SphericalUtil.computeDistanceBetween(noteLatLng, latLng);
+                    if(distance < 1000) {
                         this.notesList.add(n);
                     }
                 }
