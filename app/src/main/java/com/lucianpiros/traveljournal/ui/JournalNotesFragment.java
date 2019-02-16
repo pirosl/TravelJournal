@@ -19,8 +19,6 @@ import androidx.fragment.app.Fragment;
  */
 public class JournalNotesFragment extends Fragment implements JournalNotesListFragment.OnItemSelectedListener {
 
-    private static final String DETAILFRAGMENT_TAG = "DFTAG";
-
     // is this a master-detail fragment
     private boolean mMasterDetailFlow;
 
@@ -46,10 +44,15 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
         JournalNotesListFragment journalNotesListFragment = new JournalNotesListFragment();//(JournalNotesListFragment) getFragmentManager().findFragmentById(R.id.fragment_journalnotes);
         journalNotesListFragment.setOnItemSelectedListener(this);
 
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            journalNotesListFragment.setArguments(arguments);
+        }
+
         assert getFragmentManager() != null;
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_journalnotes, journalNotesListFragment, "")
+                .replace(R.id.fragment_journalnotes, journalNotesListFragment)
                 .commit();
 
         if (fragmentView.findViewById(R.id.note_fragment) != null) {
@@ -59,13 +62,12 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
             mMasterDetailFlow = true;
             if (savedInstanceState == null) {
                 getChildFragmentManager().beginTransaction()
-                        .replace(R.id.note_fragment, new NoteFragment(), DETAILFRAGMENT_TAG)
+                        .replace(R.id.note_fragment, new NoteFragment())
                         .commit();
             }
         } else {
             mMasterDetailFlow = false;
         }
-
 
         return fragmentView;
     }
@@ -80,7 +82,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
             noteFragment.setArguments(arguments);
 
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.note_fragment, noteFragment, DETAILFRAGMENT_TAG)
+                    .replace(R.id.note_fragment, noteFragment)
                     .commit();
         } else {
             Intent intent = new Intent(this.getContext(), NoteActivity.class);

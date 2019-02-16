@@ -13,9 +13,13 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.GlideApp;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -78,11 +82,28 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     /**
      * Class constructor
      *
-     * @param notesList notes list managed by this adapte
      * @param onItemSelectedListener selected item listener
      */
-    public NotesAdapter(List<Note> notesList, OnItemSelectedListener onItemSelectedListener) {
-        this.notesList = notesList;
+    public NotesAdapter(OnItemSelectedListener onItemSelectedListener, AdapterFilter adapterFilter) {
+        if(!adapterFilter.isFiltered()) {
+            this.notesList = DataCache.getInstance().getNotesList();
+        }
+        else {
+            if(adapterFilter.getFilterType() == AdapterFilter.FILTERTYPE_DATE) {
+                Calendar calendar = adapterFilter.getCalendar();
+                this.notesList = new ArrayList<>();
+                List<Note> workingList = DataCache.getInstance().getNotesList();
+                for(Note n : workingList) {
+                    Calendar cn = Calendar.getInstance();
+                    cn.setTime(n.getNoteCreationDate());
+                    if(calendar.get(Calendar.YEAR) == cn.get(Calendar.YEAR) &&
+                            calendar.get(Calendar.MONTH) == cn.get(Calendar.MONTH) &&
+                            calendar.get(Calendar.DAY_OF_MONTH) == cn.get(Calendar.DAY_OF_MONTH)) {
+                        this.notesList.add(n);
+                    }
+                }
+            }
+        }
         this.onItemSelectedListener = onItemSelectedListener;
     }
 

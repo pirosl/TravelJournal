@@ -1,5 +1,6 @@
 package com.lucianpiros.traveljournal.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -21,10 +22,13 @@ import android.widget.ToggleButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
+import com.lucianpiros.traveljournal.data.adapter.AdapterFilter;
 import com.lucianpiros.traveljournal.data.adapter.NotesAdapter;
 import com.lucianpiros.traveljournal.model.Note;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -46,6 +50,8 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
 
     private OnItemSelectedListener onItemSelectedListener;
 
+    private AdapterFilter adapterFilter;
+
     /**
      * Class constructor
      */
@@ -53,6 +59,7 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
 
     }
 
+    @SuppressLint("RestrictedApi")
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -71,19 +78,40 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
 
         FirebaseDB.getInstance().setNoteDBEventsListener(this);
 
-        fabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               Intent addNoteIntent = new Intent(view.getContext(), AddJournalNoteActivity.class);
-               startActivity(addNoteIntent);
+        adapterFilter = new AdapterFilter();
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            adapterFilter.setFiltered(arguments.getBoolean(getResources().getString(R.string.noteslistactivity_filtered)));
+            adapterFilter.setFilterType(arguments.getInt(getResources().getString(R.string.noteslistactivity_type)));
+            if(adapterFilter.getFilterType() == AdapterFilter.FILTERTYPE_DATE) {
+                long millis = arguments.getLong(getResources().getString(R.string.noteslistactivity_calendar));
+                String timezone = arguments.getString(getResources().getString(R.string.noteslistactivity_calendar_timezone));
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeZone(TimeZone.getTimeZone(timezone));
+                calendar.setTimeInMillis(millis);
+                adapterFilter.setCalendar(calendar);
             }
-        });
+        }
+
+        if(!adapterFilter.isFiltered()) {
+            fabButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent addNoteIntent = new Intent(view.getContext(), AddJournalNoteActivity.class);
+                    startActivity(addNoteIntent);
+                }
+            });
+        }
+        else {
+            fabButton.hide();
+        }
         return fragmentView;
     }
 
     @Override
     public void OnNotesListChanged() {
-        NotesAdapter adapter = new NotesAdapter(this);
+        NotesAdapter adapter = new NotesAdapter(this, adapterFilter);
         noteRV.setAdapter(adapter);
     }
 

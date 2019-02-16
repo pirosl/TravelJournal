@@ -13,6 +13,7 @@ import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
+import com.lucianpiros.traveljournal.data.adapter.AdapterFilter;
 import com.lucianpiros.traveljournal.model.Note;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -103,7 +105,25 @@ public class CalendarFragment extends Fragment {
                 @Override
                 public void onDayClick(EventDay eventDay) {
                     if(eventDays.contains(eventDay)) {
+                        FragmentTransaction trans = getFragmentManager().beginTransaction();
 
+                        JournalNotesFragment  journalNotesFragment = new JournalNotesFragment();
+                        Bundle arguments = new Bundle();
+                        arguments.putBoolean(getResources().getString(R.string.noteslistactivity_filtered), true);
+                        arguments.putInt(getResources().getString(R.string.noteslistactivity_type), AdapterFilter.FILTERTYPE_DATE);
+
+                        Calendar calendar = eventDay.getCalendar();
+                        arguments.putLong(getResources().getString(R.string.noteslistactivity_calendar), calendar.getTimeInMillis());
+                        arguments.putString(getResources().getString(R.string.noteslistactivity_calendar_timezone), calendar.getTimeZone().getID());
+
+                        journalNotesFragment.setArguments(arguments);
+
+                        trans.replace(R.id.calendarcontainer, journalNotesFragment);
+
+                        trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        trans.addToBackStack(null);
+
+                        trans.commit();
                     }
                     else {
                         Calendar calendar = eventDay.getCalendar();
