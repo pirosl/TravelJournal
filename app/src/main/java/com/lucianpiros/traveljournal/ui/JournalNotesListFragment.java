@@ -108,6 +108,7 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
                     startActivity(addNoteIntent);
                 }
             });
+            getActivity().setTitle(getResources().getString(R.string.app_name));
         }
         else {
             fabButton.hide();
