@@ -38,6 +38,9 @@ public class LocationService implements LocationListener {
      * Private class constructor
      */
     private LocationService() {
+        // default location Sydney
+        latitude = -34;
+        longitude = 151;
     }
 
     /**
