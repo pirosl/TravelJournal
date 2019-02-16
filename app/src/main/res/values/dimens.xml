@@ -29,4 +29,6 @@
     <dimen name="alert_imageview_padding">4dp</dimen>
 
     <dimen name="exoplayer_button_size">48dp</dimen>
+
+    <dimen name="calendarview_padding">144dp</dimen>
 </resources>
