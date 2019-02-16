@@ -73,10 +73,10 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
     }
 
     @Override
-    public void onItemSelected(int noteIdx) {
+    public void onItemSelected(String noteKey) {
         if (mMasterDetailFlow) {
             Bundle arguments = new Bundle();
-            arguments.putInt(getResources().getString(R.string.noteactivity_extra_param), noteIdx);
+            arguments.putString(getResources().getString(R.string.noteactivity_extra_param), noteKey);
 
             NoteFragment noteFragment = new NoteFragment();
             noteFragment.setArguments(arguments);
@@ -86,7 +86,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
                     .commit();
         } else {
             Intent intent = new Intent(this.getContext(), NoteActivity.class);
-            intent.putExtra(getResources().getString(R.string.noteactivity_extra_param), noteIdx);
+            intent.putExtra(getResources().getString(R.string.noteactivity_extra_param), noteKey);
             startActivity(intent);
         }
     }

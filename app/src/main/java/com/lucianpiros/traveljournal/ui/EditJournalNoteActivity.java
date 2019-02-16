@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.UpdateNoteService;
@@ -41,8 +42,7 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity impleme
             Bundle bundle = getIntent().getExtras();
             String noteKey = bundle.getString(getResources().getString(R.string.noteactivity_extra_param));
 
-            note = FirebaseDB.getInstance().getNote(noteKey);
-
+            note = DataCache.getInstance().getNote(noteKey);
 
             noteTitleET.setText(note.getNoteTitle());
             noteContentET.setText(note.getNoteContent());

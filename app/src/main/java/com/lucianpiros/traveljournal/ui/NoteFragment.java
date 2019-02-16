@@ -45,9 +45,6 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
 
     private final static String TAG = NoteFragment.class.getSimpleName();
 
-    // value indicating no note was passed in when fragment was launched
-    private static final int NOTSELECTED_IDX = -1;
-
     @BindView(R.id.viewnote_mainlayout)
     CoordinatorLayout mainLayout;
     @BindView(R.id.note_date)
@@ -65,7 +62,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     private LayoutInflater layoutInflater;
     private Note note;
     private ProgressBarTask progressBarTask;
-    private int noteIdx;
+    private String noteKey;
 
     /**
      * Class constructor
@@ -94,9 +91,9 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         // Retrieve recipe idx passed as parameter from Main Activity
         Bundle bundle = getArguments();
 
-        noteIdx = NOTSELECTED_IDX;
+        noteKey = null;
         if (bundle != null)
-            noteIdx = bundle.getInt(getResources()
+            noteKey = bundle.getString(getResources()
                     .getString(R.string.noteactivity_extra_param));
 
         return noteView;
@@ -106,8 +103,8 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     public void onStart() {
         super.onStart();
 
-        if (noteIdx != NOTSELECTED_IDX) {
-            note = DataCache.getInstance().getNote(noteIdx);
+        if (noteKey != null) {
+            note = DataCache.getInstance().getNote(noteKey);
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(note.getNoteTitle());
             noteContentTV.setText(note.getNoteContent());

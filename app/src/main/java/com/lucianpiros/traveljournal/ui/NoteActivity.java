@@ -21,17 +21,17 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
 
         if (savedInstanceState == null) {
-            Bundle bundle = getIntent().getExtras();
+            Bundle arguments = getIntent().getExtras();
 
-            assert bundle != null;
+            //assert argu != null;
 
-            int noteIdx = bundle.getInt(getResources()
+            /*String noteIdx = bundle.getInt(getResources()
                     .getString(R.string.noteactivity_extra_param));
 
             Bundle arguments = new Bundle();
             arguments.putInt(getResources()
                     .getString(R.string.noteactivity_extra_param), noteIdx);
-
+            */
             NoteFragment fragment = new NoteFragment();
             fragment.setArguments(arguments);
 

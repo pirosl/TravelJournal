@@ -38,6 +38,10 @@
     <string name="photodoalog_defaulttitle">Photo</string>
 
     <string name="noteactivity_extra_param" translatable="false">note_key_param</string>
+    <string name="noteslistactivity_filtered" translatable="false">noteslistactivity_filtered</string>
+    <string name="noteslistactivity_type" translatable="false">noteslistactivity_type</string>
+    <string name="noteslistactivity_calendar" translatable="false">noteslistactivity_calendar</string>
+    <string name="noteslistactivity_calendar_timezone" translatable="false">noteslistactivity_calendar_timezone</string>
 
     <string name="addnote_savetitle">Save</string>
     <string name="viewnote_edittitle">Edit Note</string>

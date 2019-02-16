@@ -3,6 +3,7 @@ package com.lucianpiros.traveljournal.data;
 import com.lucianpiros.traveljournal.model.Note;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Data cache class. Cache data from Fierebase and provides it to Adapter classes
@@ -16,6 +17,7 @@ public class DataCache {
     private static DataCache dataCache = null;
 
     private List<Note> notesList;
+    private Map<String, Note> notesMap;
 
     private DataCache() {
 
@@ -37,7 +39,19 @@ public class DataCache {
         this.notesList = notesList;
     }
 
+    public Map<String, Note> getNotesMap() {
+        return notesMap;
+    }
+
+    public void setNotesMap(Map<String, Note> notesMap) {
+        this.notesMap = notesMap;
+    }
+
     public Note getNote(int noteIdx) {
         return notesList.get(noteIdx);
+    }
+
+    public Note getNote(String key) {
+        return notesMap.get(key);
     }
 }

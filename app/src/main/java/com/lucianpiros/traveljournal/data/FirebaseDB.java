@@ -46,8 +46,6 @@ public class FirebaseDB {
     private NoteDBEventsListener noteDBEventsListener;
     private OnDBCompleteListener onDBCompleteListener;
 
-    private Map<String, Note> notesMap;
-
     /**
      * Private constructor as this is a singleton
      */
@@ -58,7 +56,6 @@ public class FirebaseDB {
         if(firebaseDB == null) {
             firebaseDB = new FirebaseDB();
             firebaseDB.databaseReference = FirebaseDatabase.getInstance().getReference();
-            firebaseDB.notesMap = new HashMap<>();
         }
 
         return firebaseDB;
@@ -105,52 +102,47 @@ public class FirebaseDB {
             public void onComplete(@NonNull Task<Void> task) {
                 onDBCompleteListener.onUpdateComplete(task.isSuccessful());
             }
-        });;
+        });
     }
 
     public void retrieveNotes() {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
                 fetchData(dataSnapshot);
 
                 noteDBEventsListener.OnNotesListChanged();
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
                 fetchData(dataSnapshot);
 
                 noteDBEventsListener.OnNotesListChanged();
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
                 fetchData(dataSnapshot);
 
                 noteDBEventsListener.OnNotesListChanged();
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
     }
 
-    public Note getNote(String key) {
-        return notesMap.get(key);
-    }
-
-
     private void fetchData(DataSnapshot dataSnapshot) {
         List<Note> notes = new ArrayList<>();
-        notesMap.clear();
+        Map<String, Note> notesMap = new HashMap<>();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Note name = ds.getValue(Note.class);
             notes.add(name);
@@ -158,6 +150,7 @@ public class FirebaseDB {
         }
 
         DataCache.getInstance().setNotesList(notes);
+        DataCache.getInstance().setNotesMap(notesMap);
     }
 
     public void deleteNote(@NotNull Note note) {
