@@ -67,8 +67,10 @@ public class LocationService implements LocationListener {
                         0);
                 return;
             }
-            locationService.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationService);
-            initialized = true;
+            if (locationService.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
+                locationService.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationService);
+                initialized = true;
+            }
         }
     }
 
