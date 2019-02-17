@@ -1,5 +1,6 @@
 package com.lucianpiros.traveljournal.data;
 
+import com.lucianpiros.traveljournal.model.Adventure;
 import com.lucianpiros.traveljournal.model.Note;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public class DataCache {
 
     private List<Note> notesList;
     private Map<String, Note> notesMap;
+
+    private List<Adventure> adventuresList;
 
     private DataCache() {
 
@@ -54,4 +57,13 @@ public class DataCache {
     public Note getNote(String key) {
         return notesMap.get(key);
     }
+
+    public List<Adventure> getAdventuresList() {
+        return adventuresList;
+    }
+
+    public void setAdventuresList(List<Adventure> adventuresList) {
+        this.adventuresList = adventuresList;
+    }
+
 }

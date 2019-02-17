@@ -25,6 +25,19 @@
         <item name="android:paddingRight">@dimen/layout_horizontal_padding</item>
     </style>
 
+    <style name="AdventureTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:gravity">bottom</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">@dimen/layout_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/layout_horizontal_padding</item>
+    </style>
+
+    <style name="AdventureText" parent="@android:style/TextAppearance.Small">
+        <item name="android:gravity">left</item>
+        <item name="android:paddingLeft">@dimen/layout_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/layout_horizontal_padding</item>
+    </style>
+
     <style name="FloatingActionButton">
         <item name="elevation">@dimen/material_elevation_fab_resting</item>
         <item name="pressedTranslationZ">12dp</item>

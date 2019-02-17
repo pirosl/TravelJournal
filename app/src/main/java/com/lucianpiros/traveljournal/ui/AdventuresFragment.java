@@ -34,6 +34,11 @@ public class AdventuresFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_adventures, container, false);
 
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_adventures, new AdventuresListFragment())
+                .commit();
+
         return fragmentView;
     }
 }
