@@ -12,6 +12,7 @@ import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.UpdateNoteService;
+import com.lucianpiros.traveljournal.ui.util.UIUtility;
 import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
@@ -80,7 +81,7 @@ public class EditJournalNoteActivity extends EditableJournalNoteActivity impleme
      * Save note
      */
     private void saveNote() {
-        if (isValid(noteTitleET) && isValid(noteContentET)) {
+        if (UIUtility.isValid(noteTitleET) && UIUtility.isValid(noteContentET)) {
             progressBarTask = new ProgressBarTask(progressBarHolder, this);
             progressBarTask.execute();
 

@@ -10,6 +10,7 @@ import android.view.View;
 import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.AddNoteService;
+import com.lucianpiros.traveljournal.ui.util.UIUtility;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import java.io.File;
@@ -71,7 +72,7 @@ public class AddJournalNoteActivity extends EditableJournalNoteActivity implemen
      * Add note to Firebase
      */
     private void addNote() {
-        if (isValid(noteTitleET) && isValid(noteContentET)) {
+        if (UIUtility.isValid(noteTitleET) && UIUtility.isValid(noteContentET)) {
             progressBarTask = new ProgressBarTask(progressBarHolder, this);
             progressBarTask.execute();
 

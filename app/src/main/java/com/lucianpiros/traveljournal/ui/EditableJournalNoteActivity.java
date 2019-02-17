@@ -136,18 +136,6 @@ public abstract class EditableJournalNoteActivity extends AppCompatActivity impl
         return true;
     }
 
-    /**
-     * Returns true if passed in TextView contains information
-     *
-     * @param textView - TextView to be checked
-     * @return - true if TextView contains info, false otherwise
-     */
-    protected boolean isValid(@NotNull TextView textView) {
-        CharSequence text = textView.getText();
-
-        return (text != null && text.toString().length() > 0);
-    }
-
     @OnClick(R.id.fab_add)
     protected void annimateAddFAB() {
         if (isAddFABExpanded) {
