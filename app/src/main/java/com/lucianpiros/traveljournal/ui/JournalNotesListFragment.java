@@ -23,6 +23,7 @@ import android.widget.ToggleButton;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
+import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.data.adapter.AdapterFilter;
 import com.lucianpiros.traveljournal.data.adapter.NotesAdapter;
@@ -45,6 +46,7 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
 
     public interface OnItemSelectedListener {
         void onItemSelected(String noteKey);
+        void onInitialItemSelected(String noteKey);
     }
 
     @BindView(R.id.notesrecyclerview) RecyclerView noteRV;
@@ -133,6 +135,11 @@ public class JournalNotesListFragment extends Fragment implements FirebaseDB.Not
     @Override
     public void onItemSelected(String noteKey) {
         onItemSelectedListener.onItemSelected(noteKey);
+    }
+
+    @Override
+    public void onInitialItemSelected(String noteKey) {
+        onItemSelectedListener.onInitialItemSelected(noteKey);
     }
 
     public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {

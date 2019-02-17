@@ -47,6 +47,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
      */
     public interface OnItemSelectedListener {
         void onItemSelected(String noteKey);
+        void onInitialItemSelected(String noteKey);
     }
 
     // Recipies list
@@ -121,6 +122,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             }
         }
         this.onItemSelectedListener = onItemSelectedListener;
+
+        if(this.notesList.size() > 0) {
+            this.onItemSelectedListener.onInitialItemSelected(this.notesList.get(0).getNoteKey());
+        }
     }
 
     @NonNull

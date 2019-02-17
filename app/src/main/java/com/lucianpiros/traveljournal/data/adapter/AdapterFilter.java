@@ -1,5 +1,7 @@
 package com.lucianpiros.traveljournal.data.adapter;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 
 /**
@@ -10,10 +12,12 @@ import java.util.Calendar;
  */
 public class AdapterFilter {
     public static final int FILTERTYPE_DATE = 1;
+    public static final int FILTERTYPE_GEOFENCE = 2;
 
     private boolean isFiltered;
     private int filterType;
     private Calendar calendar;
+    private LatLng latLng;
 
     public AdapterFilter() {
         isFiltered = false;
@@ -41,5 +45,13 @@ public class AdapterFilter {
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 }

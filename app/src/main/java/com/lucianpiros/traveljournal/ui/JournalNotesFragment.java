@@ -90,4 +90,19 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
             startActivity(intent);
         }
     }
+
+    @Override
+    public void onInitialItemSelected(String noteKey) {
+        if (mMasterDetailFlow) {
+            Bundle arguments = new Bundle();
+            arguments.putString(getResources().getString(R.string.noteactivity_extra_param), noteKey);
+
+            NoteFragment noteFragment = new NoteFragment();
+            noteFragment.setArguments(arguments);
+
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.note_fragment, noteFragment)
+                    .commit();
+        }
+    }
 }
