@@ -45,6 +45,9 @@
             android:name=".ui.NoteActivity"
             android:parentActivityName=".ui.MainActivity" >
         </activity>
+        <activity
+            android:name=".ui.AddAdventureActivity">
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

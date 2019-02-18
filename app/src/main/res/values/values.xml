@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="animation_duration">300</integer>
+    <integer name="note_content_max_rows">60</integer>
+    <integer name="adventure_description_max_rows">3</integer>
 </resources>

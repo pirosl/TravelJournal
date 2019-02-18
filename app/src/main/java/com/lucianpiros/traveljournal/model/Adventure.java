@@ -17,13 +17,13 @@ import java.util.List;
 public class Adventure {
     private String adventureKey;
     private String adventureTitle;
-    private String adventureContent;
+    private String adventureDescription;
     List<String> noteKeysList;
 
     public Adventure() {
         adventureKey = null;
         adventureTitle = null;
-        adventureContent = null;
+        adventureDescription = null;
         noteKeysList = null;
     }
 
@@ -43,12 +43,12 @@ public class Adventure {
         this.adventureTitle = adventureTitle;
     }
 
-    public String getAdventureContent() {
-        return adventureContent;
+    public String getAdventureDescription() {
+        return adventureDescription;
     }
 
-    public void setAdventureContent(String adventureContent) {
-        this.adventureContent = adventureContent;
+    public void setAdventureDescription(String adventureDescription) {
+        this.adventureDescription = adventureDescription;
     }
 
     public List<String> getNoteKeysList() {

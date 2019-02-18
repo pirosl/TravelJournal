@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">TravelJournal</string>
 
-    <string name="note_title_hint">Enter title</string>
+    <string name="note_title_hint">Note title</string>
     <string name="note_content_hint">Note content</string>s
+
+    <string name="adventure_title_hint">Adventure title</string>
+    <string name="adventure_description_hint">Adventure description</string>s
 
     <string name="addnote_title">Add note</string>
     <string name="addnote_success">Note added</string>
@@ -10,6 +13,10 @@
     <string name="notetitleorcontent_empty">Note title or note content null. Note can\'t be saved</string>
     <string name="savenote_success">Note updated</string>
     <string name="savenote_error">Error saving note</string>
+    <string name="adventuretitle_empty">Adventure title null. Adventure can\'t be saved</string>
+
+    <string name="addadventure_title">Add adventure</string>
+    <string name="addadventure_success">Adventure added</string>
 
     <string name="deletenote_success">Note deleted</string>
     <string name="deletenote_confirmationdialogtitle">Want to delete note?</string>

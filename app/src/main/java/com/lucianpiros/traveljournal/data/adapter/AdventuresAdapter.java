@@ -1,25 +1,15 @@
 package com.lucianpiros.traveljournal.data.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.SphericalUtil;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Adventure;
-import com.lucianpiros.traveljournal.model.Note;
-import com.lucianpiros.traveljournal.service.GlideApp;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -81,7 +71,7 @@ public class AdventuresAdapter extends RecyclerView.Adapter<AdventuresAdapter.Vi
      *
      * @param onItemSelectedListener selected item listener
      */
-    public AdventuresAdapter(OnItemSelectedListener onItemSelectedListener, AdapterFilter adapterFilter) {
+    public AdventuresAdapter(OnItemSelectedListener onItemSelectedListener) {
         this.adventuresList = DataCache.getInstance().getAdventuresList();
         this.onItemSelectedListener = onItemSelectedListener;
 
@@ -104,7 +94,7 @@ public class AdventuresAdapter extends RecyclerView.Adapter<AdventuresAdapter.Vi
         Adventure adventure = adventuresList.get(position);
         // Populate the data into the template view using the data object
         holder.adventureTitleTV.setText(adventure.getAdventureTitle());
-        holder.adventureContentTV.setText(adventure.getAdventureContent());
+        holder.adventureContentTV.setText(adventure.getAdventureDescription());
     }
 
     @Override

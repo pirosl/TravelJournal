@@ -154,6 +154,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             GlideApp.with(holder.itemView.getContext()).load(recipePhotoURL).apply(options).into(holder.noteImageIV);
         }
+        else {
+            holder.noteImageIV.setImageResource(android.R.color.transparent);
+        }
     }
 
     @Override

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/note_rootlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/list_horizontal_margin"
+        android:layout_marginEnd="@dimen/list_horizontal_margin"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <CheckBox
+                android:id="@+id/notecheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/notetitle"
+                style="@style/NoteTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_padding"
+                android:layout_marginBottom="@dimen/text_margin" />
+
+            <TextView
+                android:id="@+id/notecontent"
+                style="@style/NoteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/list_padding"
+                android:lines="3" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/noteimage"
+            style="@style/ImageView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/note_picture_contentdescription" />
+    </LinearLayout>
+
+</FrameLayout>
