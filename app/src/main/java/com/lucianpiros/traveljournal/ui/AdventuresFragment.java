@@ -10,10 +10,12 @@ import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.data.adapter.AdapterFilter;
 import com.lucianpiros.traveljournal.model.Adventure;
 
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * Adventures fragment. Displays a list of adventures
@@ -81,6 +83,22 @@ public class AdventuresFragment extends Fragment implements AdventuresListFragme
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.adventure_fragment, adventureFragment)
                     .commit();
+        }
+        else {
+            FragmentTransaction trans = getFragmentManager().beginTransaction();
+
+            AdventureFragment adventureFragment = new AdventureFragment();
+            Bundle arguments = new Bundle();
+            arguments.putString(getResources().getString(R.string.noteslistactivity_adventurekey), adventureKey);
+
+            adventureFragment.setArguments(arguments);
+
+            trans.replace(R.id.adventurecontainer, adventureFragment);
+
+            trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            trans.addToBackStack(null);
+
+            trans.commit();
         }
     }
 
