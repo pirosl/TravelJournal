@@ -7,12 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
+import com.lucianpiros.traveljournal.data.adapter.AdapterFilter;
 import com.lucianpiros.traveljournal.data.adapter.AdventuresAdapter;
+import com.lucianpiros.traveljournal.data.adapter.NotesAdapter;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.ConfigurationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -90,11 +98,15 @@ public class AdventuresListFragment extends Fragment implements FirebaseDB.Adven
 
     @Override
     public void onItemSelected(String noteKey) {
-
+        onItemSelectedListener.onItemSelected(noteKey);
     }
 
     @Override
     public void onInitialItemSelected(String noteKey) {
+        onItemSelectedListener.onInitialItemSelected(noteKey);
+    }
 
+    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
+        this.onItemSelectedListener = onItemSelectedListener;
     }
 }

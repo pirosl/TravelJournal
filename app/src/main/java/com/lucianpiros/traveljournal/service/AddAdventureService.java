@@ -1,9 +1,7 @@
 package com.lucianpiros.traveljournal.service;
 
-import com.lucianpiros.traveljournal.data.FirebaseCS;
 import com.lucianpiros.traveljournal.data.FirebaseDB;
 import com.lucianpiros.traveljournal.model.Adventure;
-import com.lucianpiros.traveljournal.model.Note;
 
 /**
  * Add adventure service implementation.

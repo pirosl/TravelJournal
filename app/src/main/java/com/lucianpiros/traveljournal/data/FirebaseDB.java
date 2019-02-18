@@ -200,13 +200,15 @@ public class FirebaseDB {
 
     private void fetchAdventures(DataSnapshot dataSnapshot) {
         List<Adventure> adventures = new ArrayList<>();
-
+        Map<String, Adventure> adventuresMap = new HashMap<>();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             Adventure adventure = ds.getValue(Adventure.class);
             adventures.add(adventure);
+            adventuresMap.put(ds.getKey(), adventure);
         }
 
         DataCache.getInstance().setAdventuresList(adventures);
+        DataCache.getInstance().setAdventuresMap(adventuresMap);
     }
 
     public void deleteNote(@NotNull Note note) {

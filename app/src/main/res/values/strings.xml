@@ -51,6 +51,7 @@
     <string name="noteslistactivity_calendar_timezone" translatable="false">noteslistactivity_calendar_timezone</string>
     <string name="noteslistactivity_latitude" translatable="false">noteslistactivity_latitude</string>
     <string name="noteslistactivity_longitude" translatable="false">noteslistactivity_longitude</string>
+    <string name="noteslistactivity_adventurekey" translatable="false">noteslistactivity_adventurekey</string>
     <string name="noteslistfiltered_ondate">Notes created on %s</string>
     <string name="noteslistfiltered_ongeofence">Geofenced notes</string>
 

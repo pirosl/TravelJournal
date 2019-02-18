@@ -21,6 +21,7 @@ public class DataCache {
     private Map<String, Note> notesMap;
 
     private List<Adventure> adventuresList;
+    private Map<String, Adventure> adventuresMap;
 
     private DataCache() {
 
@@ -55,7 +56,9 @@ public class DataCache {
     }
 
     public Note getNote(String key) {
-        return notesMap.get(key);
+        if(notesMap != null && notesMap.containsKey(key))
+            return notesMap.get(key);
+        return null;
     }
 
     public List<Adventure> getAdventuresList() {
@@ -64,6 +67,14 @@ public class DataCache {
 
     public void setAdventuresList(List<Adventure> adventuresList) {
         this.adventuresList = adventuresList;
+    }
+
+    public void setAdventuresMap(Map<String, Adventure> adventuresMap) {
+        this.adventuresMap = adventuresMap;
+    }
+
+    public Adventure getAdventure(String adventureKey) {
+        return adventuresMap.get(adventureKey);
     }
 
 }
