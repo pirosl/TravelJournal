@@ -1,4 +1,4 @@
-package com.lucianpiros.traveljournal.ui;
+package com.lucianpiros.traveljournal.ui.appwidget;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
