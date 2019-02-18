@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
                 return notesFragment;
             }
+            if (position == 1) {
+                return new AdventureContainerFragment();
+            }
             if (position == 2) {
                 return new MapContainerFragment();
             }
@@ -130,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 return new CalendarContainerFragment();
             }
 
-            AdventuresFragment adventuresFragment = new AdventuresFragment();
-            return adventuresFragment;
+            return null;
         }
 
         @Override

@@ -84,15 +84,12 @@ public class AdventuresFragment extends Fragment implements AdventuresListFragme
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            List<Adventure> adventuresList = DataCache.getInstance().getAdventuresList();
-            if (adventuresList != null && adventuresList.size() > 0) {
-                onInitialItemSelected(adventuresList.get(0).getAdventureKey());
-            }
+    public void initialClick() {
+        List<Adventure> adventuresList = DataCache.getInstance().getAdventuresList();
+        if (adventuresList != null && adventuresList.size() > 0) {
+            onInitialItemSelected(adventuresList.get(0).getAdventureKey());
         }
+
     }
 
     @Override
