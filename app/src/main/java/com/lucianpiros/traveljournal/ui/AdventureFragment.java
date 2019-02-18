@@ -2,6 +2,9 @@ package com.lucianpiros.traveljournal.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -11,6 +14,7 @@ import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Adventure;
 import com.lucianpiros.traveljournal.model.Note;
+import com.lucianpiros.traveljournal.ui.util.UIUtility;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +45,29 @@ public class AdventureFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        menuInflater.inflate(R.menu.viewadventure_menu, menu);
+
+        // change tint color
+        UIUtility.changeTintColor(menu, R.id.action_edit, getContext());
+        UIUtility.changeTintColor(menu, R.id.action_delete, getContext());
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        if (UIUtility.getViewPager().getCurrentItem() == 1) {
+            menu.findItem(R.id.action_deleteadventure).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_deleteadventure).setVisible(false);
+        }
     }
 
     @NonNull

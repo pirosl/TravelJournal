@@ -7,13 +7,17 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.android.material.tabs.TabLayout;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.service.LocationService;
+import com.lucianpiros.traveljournal.ui.util.UIUtility;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -21,6 +25,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -99,6 +104,30 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     0);
         }
+
+        UIUtility.setViewPager(viewPager);
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position)
+            {
+                //Clear action bar menu items.
+                //This prompts the onPrepareOptionsMenu which recreates the menu with
+                //with the appropriate options for a given fragment as defined by you
+                Log.d("Pager", "Selected page " + position);
+               // if(position > 0)
+                   // supportInvalidateOptionsMenu();
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged (int arg0)
+            {
+                //Clear action bar menu items and display correct ones
+                //This invalidates the menu options as soon as the swiping of pages begins
+                //suppotInvalidateOptionsMenu();
+            }
+        });
     }
 
     /**

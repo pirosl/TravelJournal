@@ -18,6 +18,7 @@ import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Note;
 import com.lucianpiros.traveljournal.service.DeleteNoteService;
+import com.lucianpiros.traveljournal.ui.util.UIUtility;
 import com.lucianpiros.traveljournal.ui.widget.ConfirmationDialog;
 import com.lucianpiros.traveljournal.ui.widget.MovieAlertDialog;
 import com.lucianpiros.traveljournal.ui.widget.PhotoAlertDialog;
@@ -28,6 +29,7 @@ import java.text.SimpleDateFormat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
@@ -131,21 +133,20 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
         menuInflater.inflate(R.menu.viewnote_menu, menu);
 
         // change tint color
-        changeTintColor(menu, R.id.action_edit);
-        changeTintColor(menu, R.id.action_delete);
+        UIUtility.changeTintColor(menu, R.id.action_edit, getContext());
+        UIUtility.changeTintColor(menu, R.id.action_delete, getContext());
     }
 
-    /**
-     * Change tint color for menu item
-     *
-     * @param menu    - menu on which color should be changed
-     * @param menuRid = menu resource id
-     */
-    private void changeTintColor(Menu menu, int menuRid) {
-        Drawable drawable = menu.findItem(menuRid).getIcon();
-        drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(getContext(), R.color.colorAccent));
-        menu.findItem(menuRid).setIcon(drawable);
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (UIUtility.getViewPager().getCurrentItem() == 0) {
+            menu.findItem(R.id.action_edit).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_edit).setVisible(false);
+            menu.findItem(R.id.action_delete).setVisible(false);
+        }
     }
 
     @Override
