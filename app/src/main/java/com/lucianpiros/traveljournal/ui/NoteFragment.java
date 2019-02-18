@@ -200,21 +200,23 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
     @Override
     public void onComplete() {
         progressBarTask.cancel(true);
-        Snackbar snackbar = Snackbar
-                .make(mainLayout, getResources().getString(R.string.deletenote_success), Snackbar.LENGTH_SHORT);
+        if(getActivity() != null) {
+            Snackbar snackbar = Snackbar
+                    .make(mainLayout, getActivity().getApplication().getResources().getString(R.string.deletenote_success), Snackbar.LENGTH_SHORT);
 
         /*if (!success) {
             snackbar.setText(getResources().getString(R.string.addnote_error));
         }*/
 
-        snackbar.show();
+            snackbar.show();
 
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                getActivity().finish();
-            }
-        });
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    getActivity().finish();
+                }
+            });
+        }
     }
 
     @Override

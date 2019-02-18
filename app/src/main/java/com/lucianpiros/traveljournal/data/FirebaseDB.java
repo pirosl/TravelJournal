@@ -229,4 +229,14 @@ public class FirebaseDB {
             }
         });
     }
+
+    public void deleteAdventure(@NotNull Adventure adventure) {
+        DatabaseReference adventureRef = databaseReference.child(DatabaseStructure.AdventuresTable).child(adventure.getAdventureKey());
+        adventureRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                onDBCompleteListener.onDeleteComplete(task.isSuccessful());
+            }
+        });
+    }
 }

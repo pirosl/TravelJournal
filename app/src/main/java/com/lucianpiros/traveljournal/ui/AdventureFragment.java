@@ -7,17 +7,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.lucianpiros.traveljournal.R;
 import com.lucianpiros.traveljournal.data.DataCache;
 import com.lucianpiros.traveljournal.model.Adventure;
 import com.lucianpiros.traveljournal.model.Note;
+import com.lucianpiros.traveljournal.service.DeleteAdventureService;
+import com.lucianpiros.traveljournal.service.DeleteNoteService;
 import com.lucianpiros.traveljournal.ui.util.UIUtility;
+import com.lucianpiros.traveljournal.ui.widget.ConfirmationDialog;
+import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,12 +35,21 @@ import butterknife.ButterKnife;
  * @author Lucian Piros
  * @version 1.0
  */
-public class AdventureFragment extends Fragment {
+public class AdventureFragment extends Fragment implements DeleteAdventureService.DeleteAdventureServiceListener, ConfirmationDialog.ConfirmationDialogActionListener {
 
     private final static String TAG = AdventureFragment.class.getSimpleName();
 
     @BindView(R.id.content)
     LinearLayout containerLayout;
+    @BindView(R.id.progressbarholder)
+    FrameLayout progressBarHolder;
+    @BindView(R.id.viewadventure_mainlayout)
+    CoordinatorLayout mainLayout;
+
+    private ViewGroup viewGroup;
+    private LayoutInflater layoutInflater;
+    private ProgressBarTask progressBarTask;
+    private Adventure adventure;
 
     /**
      * Class constructor
@@ -70,11 +86,35 @@ public class AdventureFragment extends Fragment {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_deleteadventure:
+                deleteAdventure();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Delete adventure
+     */
+    private void deleteAdventure() {
+        ConfirmationDialog confirmationDialog = new ConfirmationDialog(layoutInflater, getContext());
+        confirmationDialog.setConfirmationDialogActionListener(this);
+        confirmationDialog.initialize(viewGroup, getString(R.string.deleteadventure_confirmationdialogtitle));
+        confirmationDialog.show();
+    }
+
     @NonNull
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        this.layoutInflater = inflater;
+        this.viewGroup = container;
 
         View adventureView = inflater.inflate(R.layout.fragment_adventure, container, false);
 
@@ -87,7 +127,7 @@ public class AdventureFragment extends Fragment {
             adventureKey = bundle.getString(getResources()
                     .getString(R.string.noteslistactivity_adventurekey));
 
-            Adventure adventure = DataCache.getInstance().getAdventure(adventureKey);
+            adventure = DataCache.getInstance().getAdventure(adventureKey);
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(adventure.getAdventureTitle());
 
@@ -110,5 +150,41 @@ public class AdventureFragment extends Fragment {
         }
 
         return adventureView;
+    }
+
+    @Override
+    public void onAccept() {
+        progressBarTask = new ProgressBarTask(progressBarHolder, getActivity());
+        progressBarTask.execute();
+
+        DeleteAdventureService.getInstance().setDeleteAdventureServiceListener(this);
+        DeleteAdventureService.getInstance().deleteAdventure(adventure);
+    }
+
+    @Override
+    public void onDecline() {
+        // nothing to do here
+    }
+
+    @Override
+    public void onComplete() {
+        progressBarTask.cancel(true);
+        if(getActivity() != null) {
+            Snackbar snackbar = Snackbar
+                    .make(mainLayout, getActivity().getApplication().getResources().getString(R.string.deletenote_success), Snackbar.LENGTH_SHORT);
+
+                /*if (!success) {
+                    snackbar.setText(getResources().getString(R.string.addnote_error));
+                }*/
+
+            snackbar.show();
+
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    getActivity().finish();
+                }
+            });
+        }
     }
 }

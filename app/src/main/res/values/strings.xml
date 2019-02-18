@@ -20,6 +20,8 @@
 
     <string name="deletenote_success">Note deleted</string>
     <string name="deletenote_confirmationdialogtitle">Want to delete note?</string>
+    <string name="deleteadventure_confirmationdialogtitle">Want to delete adventure?</string>
+    <string name="deleteadventure_success">Adventure deleted</string>
 
     <string name="add_photo">Add Photo</string>
     <string name="add_photo_option1">Take Photo</string>
