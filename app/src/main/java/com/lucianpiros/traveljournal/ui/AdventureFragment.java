@@ -13,6 +13,7 @@ import com.lucianpiros.traveljournal.model.Adventure;
 import com.lucianpiros.traveljournal.model.Note;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +61,8 @@ public class AdventureFragment extends Fragment {
                     .getString(R.string.noteslistactivity_adventurekey));
 
             Adventure adventure = DataCache.getInstance().getAdventure(adventureKey);
+
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(adventure.getAdventureTitle());
 
             if (adventure != null) {
                 for (String s : adventure.getNoteKeysList()) {
