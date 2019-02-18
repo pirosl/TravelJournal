@@ -23,6 +23,7 @@ import com.lucianpiros.traveljournal.ui.widget.ConfirmationDialog;
 import com.lucianpiros.traveljournal.ui.widget.ProgressBarTask;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -129,9 +130,8 @@ public class AdventureFragment extends Fragment implements DeleteAdventureServic
 
             adventure = DataCache.getInstance().getAdventure(adventureKey);
 
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(adventure.getAdventureTitle());
-
             if (adventure != null && adventure.getNoteKeysList() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(adventure.getAdventureTitle());
                 for (String s : adventure.getNoteKeysList()) {
                     TextView valueTV = new TextView(getContext());
                     Note note = DataCache.getInstance().getNote(s);
