@@ -22,6 +22,16 @@ import java.io.InputStream;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Firebase Cloud Storage class. Handles all operation related to saev/remove/retrieve files from
+ * cloud storage.
+ *
+ * <p>
+ * This class is a singleton class.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class FirebaseCS {
     private static final String TAG = FirebaseCS.class.getSimpleName();
 

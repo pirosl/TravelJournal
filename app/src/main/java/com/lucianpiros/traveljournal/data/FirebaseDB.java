@@ -21,6 +21,15 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Firebase Realtime Database management clas. Handles all CRUD database operations
+ *
+ * <p>
+ * This class is a singleton class.
+ *
+ * @author Lucian Piros
+ * @version 1.0
+ */
 public class FirebaseDB {
 
     private interface DatabaseStructure {
