@@ -2,6 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'test'
+            keyPassword '123456'
+            storeFile file('signingKey.jks')
+            storePassword '123456'
+        }
+        release {
+            keyAlias 'test'
+            keyPassword '123456'
+            storeFile file('signingKey.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.lucianpiros.traveljournal"
@@ -16,10 +30,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
