@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
-    <uses-feature android:name="android.hardware.camera" />
 
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +17,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".ui.AppNotesWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_notes_widget_info" />
+        </receiver>
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -35,19 +43,14 @@
         </activity>
         <activity
             android:name=".ui.AddJournalNoteActivity"
-            android:parentActivityName=".ui.MainActivity" >
-        </activity>
+            android:parentActivityName=".ui.MainActivity"></activity>
         <activity
             android:name=".ui.EditJournalNoteActivity"
-            android:parentActivityName=".ui.MainActivity" >
-        </activity>
+            android:parentActivityName=".ui.MainActivity"></activity>
         <activity
             android:name=".ui.NoteActivity"
-            android:parentActivityName=".ui.MainActivity" >
-        </activity>
-        <activity
-            android:name=".ui.AddAdventureActivity">
-        </activity>
+            android:parentActivityName=".ui.MainActivity"></activity>
+        <activity android:name=".ui.AddAdventureActivity"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -56,7 +59,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"></meta-data>
+                android:resource="@xml/provider_paths" />
         </provider>
     </application>
 
