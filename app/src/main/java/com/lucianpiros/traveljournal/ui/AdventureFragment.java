@@ -131,7 +131,7 @@ public class AdventureFragment extends Fragment implements DeleteAdventureServic
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(adventure.getAdventureTitle());
 
-            if (adventure != null) {
+            if (adventure != null && adventure.getNoteKeysList() != null) {
                 for (String s : adventure.getNoteKeysList()) {
                     TextView valueTV = new TextView(getContext());
                     Note note = DataCache.getInstance().getNote(s);
@@ -182,7 +182,7 @@ public class AdventureFragment extends Fragment implements DeleteAdventureServic
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
-                    getActivity().finish();
+                    getActivity().onBackPressed();
                 }
             });
         }

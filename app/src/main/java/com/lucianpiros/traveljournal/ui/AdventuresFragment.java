@@ -121,7 +121,7 @@ public class AdventuresFragment extends Fragment implements AdventuresListFragme
 
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.adventure_fragment, adventureFragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 }

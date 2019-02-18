@@ -102,7 +102,7 @@ public class JournalNotesFragment extends Fragment implements JournalNotesListFr
 
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.note_fragment, noteFragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 }

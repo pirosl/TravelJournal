@@ -213,7 +213,7 @@ public class NoteFragment extends Fragment implements DeleteNoteService.DeleteNo
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
-                    getActivity().finish();
+                    getActivity().onBackPressed();
                 }
             });
         }
