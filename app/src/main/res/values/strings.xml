@@ -69,6 +69,11 @@
     <string name="alerdialog_acceptbutton_contentdescription">Yes button</string>
     <string name="alerdialog_cancelbutton_contentdescription">Cancel button</string>
     <string name="alertdialog_closebutton_contentdescription">Close dialog button</string>
+    <string name="fab_addpicture_contentdescription">Add picture floating action button</string>
+    <string name="fab_addmovie_contentdescription">Add movie floating action button</string>
+    <string name="fab_addmedia_contentdescription">Add media floating action button</string>
+    <string name="fab_addjournalnote_contentdescription">Add note floating action button</string>
+    <string name="fab_addadventure_contentdescription">Add adventure floating action button</string>
     <string name="alertdialog_defaulttitle">Title</string>
     <string name="alertdialog_movie_localfilename" translatable="false">tmp_movie.mp4</string>
 
